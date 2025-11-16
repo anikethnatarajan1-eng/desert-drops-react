@@ -2,37 +2,131 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>4niketh.fun – University of Arizona</title>
-
-  <!-- External stylesheet -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- External script -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>4niketh.fun – WaterCalc</title>
+  <link rel="stylesheet" href="style.css"/>
   <script src="script.js" defer></script>
 </head>
 <body>
-  <!-- Splash screen -->
+  <!-- Splash overlay (optional) -->
   <div id="splash">
-    <img src="assets/uoa-logo.png" alt="University of Arizona Tucson Logo">
+    <img src="assets/uoa-logo.png" alt="University of Arizona Tucson Logo"/>
   </div>
 
-  <!-- Main content -->
-  <div class="container">
+  <!-- Intro panel with X -->
+  <div class="container" id="introPanel">
+    <button class="close-btn" id="closeIntro" aria-label="Close intro">✕</button>
+
     <div class="water-fill"></div>
 
-    <div id="content">
+    <div id="introContent">
       <h1>Welcome to WaterCalc</h1>
       <p>WaterCalc is a digital simulation inspired by research and innovation at the University of Arizona in Tucson — a leading institution in water sustainability and desert ecology.</p>
       <p>Located in the heart of the Sonoran Desert, the University of Arizona is a global leader in water conservation, hydrology, and climate resilience. Its scientists and students work on cutting-edge solutions to ensure clean water access in arid regions.</p>
       <p>This simulation reflects the journey of water from collection to purification, echoing the real-world technologies developed in Tucson — from rainwater harvesting to advanced filtration systems.</p>
       <p>WaterCalc invites you to explore the challenges of water scarcity and the importance of sustainable practices. It’s a tribute to the resilience of desert communities and the pioneering spirit of Arizona researchers.</p>
       <p>Whether you're a student, educator, or curious explorer, we hope this experience deepens your appreciation for water as a vital resource and sparks interest in the science behind its preservation.</p>
-    </div>
-
-    <div class="footer">
-      2025 | Inspired by the University of Arizona, Tucson
+      <div class="footer">&copy; 2025 4niketh.fun | Inspired by the University of Arizona, Tucson</div>
     </div>
   </div>
+
+  <!-- Main app -->
+  <main id="app" class="app hidden">
+    <!-- Water calculator -->
+    <section class="card" id="calculator">
+      <h2>Water calculator</h2>
+      <form id="calcForm">
+        <div class="grid">
+          <label>
+            <span>Daily usage per person (liters)</span>
+            <input type="number" id="usagePerPerson" min="0" step="0.1" value="50" required/>
+          </label>
+          <label>
+            <span>Number of people</span>
+            <input type="number" id="numPeople" min="1" step="1" value="4" required/>
+          </label>
+          <label>
+            <span>Collection area (m²)</span>
+            <input type="number" id="collectionArea" min="0" step="0.1" value="100" required/>
+          </label>
+          <label>
+            <span>Rainfall (mm/month)</span>
+            <input type="number" id="rainfall" min="0" step="0.1" value="20" required/>
+          </label>
+          <label>
+            <span>Filtration efficiency (%)</span>
+            <input type="number" id="efficiency" min="0" max="100" step="1" value="85" required/>
+          </label>
+        </div>
+        <button type="submit" class="primary">Calculate</button>
+      </form>
+      <div id="calcResults" class="results"></div>
+      <p class="note">Estimates assume rainfall depth over collection area, with conversion: 1 mm = 1 liter/m². Filtration applies post-collection.</p>
+    </section>
+
+    <!-- FAQ with dropdown answers -->
+    <section class="card" id="faq">
+      <h2>Questions and answers</h2>
+      <div class="accordion">
+        <div class="item">
+          <button class="accordion-toggle">How does rainwater collection work?</button>
+          <div class="accordion-content">
+            <p>Rainfall depth in millimeters times collection area in square meters yields liters collected. Pre-filtration removes debris; post-filtration improves potability.</p>
+            <div class="video-grid">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Example video" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <button class="accordion-toggle">What filtration methods are best?</button>
+          <div class="accordion-content">
+            <p>Common methods include sediment filters, activated carbon, reverse osmosis, and UV treatment, chosen based on contaminants and required flow rate.</p>
+            <div class="video-grid">
+              <iframe src="https://www.youtube.com/embed/aqz-KE-bpKQ" title="Filtration basics" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <button class="accordion-toggle">How do I estimate monthly needs?</button>
+          <div class="accordion-content">
+            <p>Multiply daily use per person by number of people and by days in the period. Compare with collected volume after filtration to plan storage and usage.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live weather by city -->
+    <section class="card" id="weather">
+      <h2>Live weather by city</h2>
+      <form id="weatherForm">
+        <label class="inline">
+          <span>City name</span>
+          <input type="text" id="cityInput" placeholder="Los Angeles, CA" required/>
+        </label>
+        <button type="submit" class="primary">Get weather</button>
+      </form>
+      <div id="weatherResult" class="results"></div>
+      <p class="note">Powered by a free public weather API. Data may differ from media outlets.</p>
+    </section>
+
+    <!-- Bulletin board (mini blog) -->
+    <section class="card" id="bulletin">
+      <h2>Bulletin board</h2>
+      <form id="commentForm">
+        <label>
+          <span>Your name</span>
+          <input type="text" id="commentAuthor" maxlength="64" placeholder="Name or alias" required/>
+        </label>
+        <label>
+          <span>Your thought</span>
+          <textarea id="commentText" rows="3" maxlength="500" placeholder="Share a thought…" required></textarea>
+        </label>
+        <button type="submit" class="primary">Post</button>
+      </form>
+      <ul id="commentList" class="comments"></ul>
+      <p class="note">Comments are stored in your browser (localStorage). You can delete your own posts on this device.</p>
+    </section>
+  </main>
 </body>
 </html>
+
