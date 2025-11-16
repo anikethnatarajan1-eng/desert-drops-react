@@ -8,7 +8,7 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <!-- Splash overlay (optional) -->
+  <!-- Splash overlay -->
   <div id="splash">
     <img src="assets/uoa-logo.png" alt="University of Arizona Tucson Logo"/>
   </div>
@@ -64,32 +64,26 @@
       <p class="note">Estimates assume rainfall depth over collection area, with conversion: 1 mm = 1 liter/m². Filtration applies post-collection.</p>
     </section>
 
-    <!-- FAQ with dropdown answers -->
+    <!-- FAQ section -->
     <section class="card" id="faq">
       <h2>Questions and answers</h2>
       <div class="accordion">
         <div class="item">
           <button class="accordion-toggle">How does rainwater collection work?</button>
           <div class="accordion-content">
-            <p>Rainfall depth in millimeters times collection area in square meters yields liters collected. Pre-filtration removes debris; post-filtration improves potability.</p>
-            <div class="video-grid">
-              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Example video" allowfullscreen></iframe>
-            </div>
+            <p>Rainwater collection involves capturing rainfall from rooftops or surfaces, storing it, and filtering it for use. It’s measured by multiplying rainfall depth (mm) by collection area (m²).</p>
           </div>
         </div>
         <div class="item">
           <button class="accordion-toggle">What filtration methods are best?</button>
           <div class="accordion-content">
-            <p>Common methods include sediment filters, activated carbon, reverse osmosis, and UV treatment, chosen based on contaminants and required flow rate.</p>
-            <div class="video-grid">
-              <iframe src="https://www.youtube.com/embed/aqz-KE-bpKQ" title="Filtration basics" allowfullscreen></iframe>
-            </div>
+            <p>Effective methods include sediment filters, activated carbon, reverse osmosis, and UV purification. The best choice depends on your water source and intended use.</p>
           </div>
         </div>
         <div class="item">
           <button class="accordion-toggle">How do I estimate monthly needs?</button>
           <div class="accordion-content">
-            <p>Multiply daily use per person by number of people and by days in the period. Compare with collected volume after filtration to plan storage and usage.</p>
+            <p>Multiply daily usage per person by number of people and days in the month. Compare this with filtered water collected to assess surplus or deficit.</p>
           </div>
         </div>
       </div>
@@ -106,10 +100,10 @@
         <button type="submit" class="primary">Get weather</button>
       </form>
       <div id="weatherResult" class="results"></div>
-      <p class="note">Powered by a free public weather API. Data may differ from media outlets.</p>
+      <p class="note">Powered by Open-Meteo. Forecast link opens Weather.com for your city.</p>
     </section>
 
-    <!-- Bulletin board (mini blog) -->
+    <!-- Bulletin board -->
     <section class="card" id="bulletin">
       <h2>Bulletin board</h2>
       <form id="commentForm">
@@ -129,4 +123,3 @@
   </main>
 </body>
 </html>
-
