@@ -101,15 +101,17 @@ weatherForm.addEventListener("submit", async (e) => {
     const cur = data.current;
 
     weatherResult.innerHTML = `
-      <div><strong>Location:</strong> ${name}, ${country}</div>
-      <div><strong>Temperature:</strong> ${cur.temperature_2m} °C</div>
-      <div><strong>Humidity:</strong> ${cur.relative_humidity_2m} %</div>
-      <div><strong>Wind:</strong> ${cur.wind_speed_10m} m/s</div>
-      <div><strong>Precipitation:</strong> ${cur.precipitation} mm</div>
-      <div style="margin-top:8px;">
-        <a href="https://weather.com/search/enhancedlocalsearch?where=${encodeURIComponent(cityName)}" target="_blank" rel="noopener">View on Weather Channel</a>
-      </div>
-    `;
+  <div><strong>Location:</strong> ${name}, ${country}</div>
+  <div><strong>Temperature:</strong> ${cur.temperature_2m} °C</div>
+  <div><strong>Humidity:</strong> ${cur.relative_humidity_2m} %</div>
+  <div><strong>Wind:</strong> ${cur.wind_speed_10m} m/s</div>
+  <div><strong>Precipitation:</strong> ${cur.precipitation} mm</div>
+  <div style="margin-top:8px;">
+    <a href="https://weather.com/weather/today/l/${latitude},${longitude}" target="_blank" rel="noopener">
+      View full forecast on Weather.com
+    </a>
+  </div>
+ `;
   } catch (err) {
     console.error(err);
     weatherResult.textContent = "Failed to load weather. Try again.";
