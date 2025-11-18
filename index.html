@@ -6,8 +6,18 @@
   <title>4niketh.fun – WaterCalc</title>
   <link rel="stylesheet" href="style.css"/>
   <script src="script.js" defer></script>
+  <script src="translate.js" defer></script>
 </head>
 <body>
+  <!-- Translate box: type a language name or code and open Google Translate for this page -->
+  <div id="translateBox" role="region" aria-label="Translate page">
+    <form id="translateForm">
+      <label for="translateInput" class="sr-only">Translate page to language</label>
+      <input id="translateInput" type="text" placeholder="Type language name or code (e.g., Spanish or es)" aria-label="Language" />
+      <button type="submit" class="primary">Translate</button>
+      <div id="translateHint" class="note">Try "Spanish", "fr", or "zh-CN"</div>
+    </form>
+  </div>
   <!-- Splash overlay -->
   <div id="splash">
     <!-- use explicit relative path and include image dimensions to avoid broken-link layout shift -->
