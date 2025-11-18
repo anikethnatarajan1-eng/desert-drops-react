@@ -1,49 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>4niketh.fun – WaterCalc</title>
-  <link rel="stylesheet" href="style.css"/>
-  <script src="script.js" defer></script>
-  <!-- Intro.js for tutorial -->
-  <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
-  <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
-</head>
-<body>
-  <!-- Splash overlay -->
-  <div id="splash">
-    <img src="./assets/uoa-logo.png" alt="University of Arizona, Tucson Logo" width="300" height="168"/>
-  </div>
+window.addEventListener("load", () => {
+  const splash = document.getElementById("splash");
+  const introPanel = document.getElementById("introPanel");
+  const app = document.getElementById("app");
+  const closeIntro = document.getElementById("closeIntro");
 
-  <!-- Intro panel -->
-  <div class="container" id="introPanel">
-    <button class="close-btn" id="closeIntro">✕</button>
-    <div class="water-fill"></div>
-    <div id="introContent">
-      <h1>Welcome to WaterCalc</h1>
-      <p>WaterCalc is a digital simulation inspired by research and innovation at the University of Arizona in Tucson...</p>
-      <div class="footer">&copy; 2025 4niketh.fun</div>
-    </div>
-  </div>
+  function revealApp() {
+    // Hide intro
+    introPanel.style.opacity = 0;
+    introPanel.style.transform = "translateY(-10px)";
+    setTimeout(() => {
+      introPanel.classList.add("hidden");
+      app.classList.remove("hidden");
 
-  <!-- Main app -->
-  <main id="app" class="app hidden">
-    <section class="card" id="calculator" data-intro="Estimate your monthly water needs here.">
-      <!-- calculator form -->
-    </section>
+      // Launch tutorial
+      introJs().setOptions({
+        showProgress: true,
+        skipLabel: "Skip tutorial",
+        nextLabel: "Next →",
+        prevLabel: "← Back",
+        doneLabel: "Finish"
+      }).start();
+    }, 300);
+  }
 
-    <section class="card" id="faq" data-intro="Explore answers to common questions.">
-      <!-- FAQ accordion -->
-    </section>
+  // Fix: ensure event listener is attached
+  closeIntro.addEventListener("click", revealApp);
 
-    <section class="card" id="weather" data-intro="Check live weather and link to Weather.com.">
-      <!-- weather form -->
-    </section>
-
-    <section class="card" id="bulletin" data-intro="Post your thoughts or questions here.">
-      <!-- bulletin board -->
-    </section>
-  </main>
-</body>
-</html>
+  // Remove splash after fade
+  setTimeout(() => splash && splash.remove(), 4000);
+});
