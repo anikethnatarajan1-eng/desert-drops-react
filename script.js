@@ -1,52 +1,49 @@
-window.addEventListener("load", () => {
-  const splash = document.getElementById("splash");
-  const introPanel = document.getElementById("introPanel");
-  const app = document.getElementById("app");
-  const closeIntro = document.getElementById("closeIntro");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>4niketh.fun – WaterCalc</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="script.js" defer></script>
+  <!-- Intro.js for tutorial -->
+  <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+  <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+</head>
+<body>
+  <!-- Splash overlay -->
+  <div id="splash">
+    <img src="./assets/uoa-logo.png" alt="University of Arizona, Tucson Logo" width="300" height="168"/>
+  </div>
 
-  function revealApp() {
-    introPanel.style.opacity = 0;
-    introPanel.style.transform = "translateY(-8px)";
-    setTimeout(() => {
-      introPanel.classList.add("hidden");
-      app.classList.remove("hidden");
-      app.scrollIntoView({ behavior: "smooth", block: "start" });
+  <!-- Intro panel -->
+  <div class="container" id="introPanel">
+    <button class="close-btn" id="closeIntro">✕</button>
+    <div class="water-fill"></div>
+    <div id="introContent">
+      <h1>Welcome to WaterCalc</h1>
+      <p>WaterCalc is a digital simulation inspired by research and innovation at the University of Arizona in Tucson...</p>
+      <div class="footer">&copy; 2025 4niketh.fun</div>
+    </div>
+  </div>
 
-      // Start guided tutorial
-      setTimeout(() => {
-        introJs().setOptions({
-          showProgress: true,
-          skipLabel: "Skip tutorial",
-          nextLabel: "Next →",
-          prevLabel: "← Back",
-          doneLabel: "Finish"
-        }).start();
-      }, 500);
-    }, 300);
-  }
+  <!-- Main app -->
+  <main id="app" class="app hidden">
+    <section class="card" id="calculator" data-intro="Estimate your monthly water needs here.">
+      <!-- calculator form -->
+    </section>
 
-  closeIntro.addEventListener("click", revealApp);
-  setTimeout(() => splash && splash.remove(), 4000);
-});
+    <section class="card" id="faq" data-intro="Explore answers to common questions.">
+      <!-- FAQ accordion -->
+    </section>
 
-// Calculator
-document.getElementById("calcForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const usagePerPerson = parseFloat(document.getElementById("usagePerPerson").value);
-  const numPeople = parseInt(document.getElementById("numPeople").value, 10);
-  const collectionArea = parseFloat(document.getElementById("collectionArea").value);
-  const rainfall = parseFloat(document.getElementById("rainfall").value);
-  const efficiency = Math.max(0, Math.min(100, parseFloat(document.getElementById("efficiency").value)));
+    <section class="card" id="weather" data-intro="Check live weather and link to Weather.com.">
+      <!-- weather form -->
+    </section>
 
-  const collectedLiters = rainfall * collectionArea;
-  const filteredLiters = collectedLiters * (efficiency / 100);
-  const monthlyNeeds = usagePerPerson * numPeople * 30;
-  const surplus = filteredLiters - monthlyNeeds;
-
-  const results = document.getElementById("calcResults");
-  results.innerHTML = `
-    <div><strong>Collected (raw):</strong> ${collectedLiters.toFixed(1)} L</div>
-    <div><strong>After filtration:</strong> ${filteredLiters.toFixed(1)} L</div>
-    <div><strong>Monthly needs:</strong> ${monthlyNeeds.toFixed(1)} L</div>
-    <div><strong>${surplus >= 0 ? "Surplus" : "Deficit"}:</strong> ${Math.abs(surplus).toFixed(1)} L</div>
-  `;
+    <section class="card" id="bulletin" data-intro="Post your thoughts or questions here.">
+      <!-- bulletin board -->
+    </section>
+  </main>
+</body>
+</html>
