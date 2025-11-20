@@ -89,10 +89,21 @@ weatherForm.addEventListener("submit", async (e) => {
     // Geocode city
     const g = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1`);
     const geo = await g.json();
+
     if (!geo.results || geo.results.length === 0) {
-      weatherResult.textContent = "City not found.";
+      // Always give a Weather.com link even if geocoding fails
+      weatherResult.innerHTML = `
+        <div><strong>Location:</strong> ${cityName}</div>
+        <div>No local weather data found.</div>
+        <div style="margin-top:8px;">
+          <a href="https://weather.com/search/enhancedlocalsearch?where=${encodeURIComponent(cityName)}" target="_blank" rel="noopener">
+            View on Weather.com
+          </a>
+        </div>
+      `;
       return;
     }
+
     const { latitude, longitude, name, country } = geo.results[0];
 
     // Current weather
@@ -107,7 +118,9 @@ weatherForm.addEventListener("submit", async (e) => {
       <div><strong>Wind:</strong> ${cur.wind_speed_10m} m/s</div>
       <div><strong>Precipitation:</strong> ${cur.precipitation} mm</div>
       <div style="margin-top:8px;">
-        <a href="https://weather.com/search/enhancedlocalsearch?where=${encodeURIComponent(cityName)}" target="_blank" rel="noopener">View on Weather Channel</a>
+        <a href="https://weather.com/weather/today/l/${latitude},${longitude}" target="_blank" rel="noopener">
+          View full forecast on Weather.com
+        </a>
       </div>
     `;
   } catch (err) {
