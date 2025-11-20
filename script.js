@@ -4,14 +4,18 @@ window.addEventListener("load", () => {
   const introPanel = document.getElementById("introPanel");
   const app = document.getElementById("app");
   const closeIntro = document.getElementById("closeIntro");
+  const sidebar = document.getElementById("sidebar");
 
-  // When intro closed, hide it and show app
+  // When intro closed, hide it and show app + sidebar
   function revealApp() {
     introPanel.style.opacity = 0;
     introPanel.style.transform = "translateY(-8px)";
     setTimeout(() => {
       introPanel.classList.add("hidden");
       app.classList.remove("hidden");
+      if (sidebar) {
+        sidebar.classList.remove("hidden"); // show sidebar
+      }
       app.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 300);
   }
@@ -30,6 +34,21 @@ window.addEventListener("load", () => {
   setTimeout(() => splash && splash.remove(), 4000);
 });
 
+// Smooth scrolling for sidebar links
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebarLinks = document.querySelectorAll("#sidebar a");
+  sidebarLinks.forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute("href").substring(1);
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+});
+
 // Water calculator
 document.getElementById("calcForm").addEventListener("submit", (e) => {
   e.preventDefault();
@@ -46,6 +65,17 @@ document.getElementById("calcForm").addEventListener("submit", (e) => {
   // Needs per month (liters) = daily * people * 30
   const monthlyNeeds = usagePerPerson * numPeople * 30;
   const surplus = filteredLiters - monthlyNeeds;
+
+  // NEW: storage capacity + daily breakdown + visual status
+const tankCapacity = parseFloat(document.getElementById("tankCapacity").value);
+const overflow = filteredLiters - tankCapacity;
+const tankStatus = overflow > 0
+  ? `Overflow of ${overflow.toFixed(1)} L`
+  : `Unused capacity: ${Math.abs(overflow).toFixed(1)} L`;
+
+const dailySurplus = surplus / 30;
+const statusColor = surplus >= 0 ? "green" : "red";
+const statusLabel = surplus >= 0 ? "Sustainable" : "Unsustainable";
 
   const results = document.getElementById("calcResults");
   results.innerHTML = `
@@ -105,6 +135,10 @@ weatherForm.addEventListener("submit", async (e) => {
     }
 
     const { latitude, longitude, name, country } = geo.results[0];
+
+    if (window.map) {
+ window.map = L.map("worldMap").setView([20, 0], 2);
+}
 
     // Current weather
     const w = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation&timezone=auto`);
@@ -185,3 +219,8 @@ commentForm.addEventListener("submit", (e) => {
 });
 
 loadComments();
+
+setTimeout(() => {
+  map.invalidateSize();
+}, 400); // after sidebar and app are shown
+
