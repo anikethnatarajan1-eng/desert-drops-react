@@ -14,9 +14,11 @@
 html, body { height: 100%; }
 
 body {
-  margin: 0;
-  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-family: 'Baloo 2', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   background: radial-gradient(circle at top left, var(--bg-1), var(--bg-2));
+}
+body {
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -245,3 +247,4 @@ button.primary:hover { background: #0050cc; transform: translateY(-2px); }
 .sidebar a:hover {
   text-decoration: underline;
 }
+
