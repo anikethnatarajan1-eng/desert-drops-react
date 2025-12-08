@@ -1,506 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Meta -->
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Desert Drops — Urban analytics, maps, and accessible tools</title>
-  <meta name="description" content="Cinematic urban analytics, accessible tools, and community mapping. Water, conservation, NASA weather, and equity storytelling built for real users."/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Desert Drops — Reviews</title>
 
-  <!-- Fonts (tribute aesthetic) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
 
-  <!-- Styles -->
   <style>
-    :root {
+    :root{
       --bg: #0b0e12;
       --card: #12161d;
       --text: #e9eef8;
       --muted: #a9b3c7;
       --accent: #ffffff;
       --accent-2: #9ef0a7;
-      --danger: #ff6b6b;
       --shadow: 0 14px 40px rgba(0,0,0,0.45);
       --radius: 14px;
       --gap: 18px;
       --container: min(1100px, 92vw);
     }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
       background:
         radial-gradient(1200px 800px at 10% 0%, #0e141b, var(--bg)),
         radial-gradient(1000px 600px at 90% 110%, #0e141b, var(--bg));
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.5;
+      color:var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height:1.6;
     }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    a{ color:var(--accent); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
 
-    /* Header & Nav */
-    header {
-      position: sticky; top: 0; z-index: 40;
+    header{
+      position: sticky; top:0; z-index:50;
       backdrop-filter: saturate(120%) blur(8px);
       background: rgba(18,22,29,0.7);
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-    .nav {
-      display: flex; align-items: center; justify-content: space-between;
-      width: var(--container); margin: 0 auto; padding: 14px 0;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: 0.2px; }
-    .brand .logo {
-      width: 34px; height: 34px; border-radius: 8px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 6px 18px rgba(255,255,255,0.35);
-    }
-    .brand .text { color: var(--text); font-weight: 800; }
-    .nav-links { display: flex; gap: 16px; flex-wrap: wrap; }
-    .nav-links a {
-      padding: 8px 12px; border-radius: 8px; color: var(--text);
-      transition: background 0.2s ease;
-    }
-    .nav-links a:hover { background: rgba(255,255,255,0.06); }
+    .nav{ display:flex; justify-content:space-between; align-items:center; width:var(--container); margin:0 auto; padding:14px 0; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:800; }
+    .brand .logo{ width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); }
+    .nav-links{ display:flex; gap:16px; flex-wrap:wrap; }
+    .nav-links a{ padding:8px 12px; border-radius:8px; color:var(--text); }
+    .nav-links a:hover{ background:rgba(255,255,255,0.06); }
+    .nav-links .active{ border:1px solid rgba(255,255,255,0.12); }
 
-    /* Cards & layout */
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    .pad { padding: 22px; }
+    .section{ width:var(--container); margin:28px auto; display:grid; gap:var(--gap); }
+    .card{ background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius); box-shadow:var(--shadow); }
+    .pad{ padding:22px; }
+    .title{ font-size:clamp(28px,5vw,44px); font-weight:800; margin:12px 0 10px; }
+    .h2{ font-size:clamp(22px,4vw,32px); font-weight:800; margin:8px 0 10px; }
+    .p{ color:var(--muted); margin:0 0 12px; }
 
-    .section { width: var(--container); margin: 28px auto; display: grid; gap: var(--gap); }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
-    .grid-auto { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-
-    .title { font-size: clamp(26px, 5vw, 44px); font-weight: 800; margin: 12px 0 10px; }
-    .lead { color: var(--muted); font-size: clamp(14px, 1.6vw, 18px); margin-bottom: 16px; }
-    .h2 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; margin: 8px 0 10px; }
-    .p { color: var(--muted); margin: 0 0 12px; }
-
-    .tag {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 10px; border-radius: 999px;
-      font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
-      color: var(--muted);
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
+    .grid{ display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .review-card{
+      position:relative; overflow:hidden; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.08); background:#0f1319;
+      display:flex; flex-direction:column;
     }
-    .tag .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 2px rgba(255,255,255,0.25);
-    }
+    .review-card .pad{ padding:16px; }
+    .name{ font-weight:800; }
+    .meta{ display:flex; gap:8px; flex-wrap:wrap; color:var(--muted); font-size:12px; }
+    .stars{ color:#ffe085; font-weight:800; letter-spacing:1px; }
+    .quote{ color:var(--muted); font-size:14px; margin-top:10px; }
+    .delete-btn{ margin-top:10px; font-size:12px; background:rgba(255,255,255,0.08); border:none; border-radius:8px; padding:6px 10px; color:var(--muted); cursor:pointer; }
+    .delete-btn:hover{ background:rgba(255,255,255,0.15); color:#fff; }
 
-    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 12px 16px; border-radius: 12px; font-weight: 700;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.06); color: var(--text);
-      transition: transform 0.06s ease, background 0.2s ease, box-shadow 0.2s ease;
-    }
-    .btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.09); }
-    .btn.primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #071016; border: none;
-      box-shadow: 0 12px 28px rgba(255,255,255,0.35);
-    }
-    .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.14); }
-
-    .list { display: grid; gap: 10px; }
-    .item {
-      display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start;
-      padding: 12px; border-radius: 12px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-    }
-    .item .icon {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: linear-gradient(135deg, #ffe085, #ffad7a);
-      box-shadow: 0 8px 20px rgba(255,173,122,0.25);
-    }
-
-    /* Media blocks */
-    .media-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-    .media {
-      aspect-ratio: 16/9; background: #0f1319;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px; overflow: hidden;
-    }
-    .media iframe, .media video, .media img { width: 100%; height: 100%; display: block; object-fit: cover; }
-
-    /* Hero video container */
-    .hero { position: relative; min-height: 52vh; overflow: hidden; }
-    .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; }
-    .hero-wrap { position: relative; z-index: 1; width: var(--container); margin: 0 auto; padding: 60px 0; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 26px; }
-
-    /* Divider */
-    .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); border: none; margin: 10px 0 16px; }
-
-    /* Accessibility helpers */
-    .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
-    .tts-controls { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; }
-    .tts-btn {
-      padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.06); color: var(--text); font-weight: 600;
-    }
-
-    /* Footer */
-    footer {
-      width: var(--container); margin: 40px auto 80px;
-      color: var(--muted);
-      display: flex; justify-content: space-between; align-items: center; gap: 20px;
-      border-top: 1px dashed rgba(255,255,255,0.12);
-      padding-top: 18px;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .hero-wrap { grid-template-columns: 1fr; }
-      .grid-2 { grid-template-columns: 1fr; }
-      .grid-3 { grid-template-columns: 1fr; }
-    }
+    .footer{ width:var(--container); margin:40px auto 80px; color:var(--muted); display:flex; justify-content:space-between; align-items:center; gap:20px; border-top:1px dashed rgba(255,255,255,0.12); padding-top:18px; }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header role="banner" aria-label="Primary navigation">
     <div class="nav">
-      <div class="brand" aria-label="Site brand">
-        <div class="logo" aria-hidden="true"></div>
-        <a href="index.html" class="text">Desert Drops</a>
-      </div>
+      <div class="brand" aria-label="Site brand"><div class="logo" aria-hidden="true"></div><a href="index.html" class="text">Desert Drops</a></div>
       <nav class="nav-links" aria-label="Main navigation">
         <a href="services.html">Services</a>
-        <a href="contact.html">Contact</a>
         <a href="projects.html">Projects</a>
         <a href="gis.html">GIS for Good</a>
         <a href="articles.html">Articles</a>
         <a href="qna.html">Q&A</a>
         <a href="resource.html">Resources</a>
-        <a href="reviews.html">Reviews</a>
+        <a href="contact.html">Contact</a>
+        <a href="reviews.html" class="active">Reviews</a>
       </nav>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section class="hero" aria-label="Hero with cinematic background">
-    <video autoplay loop muted playsinline>
-      <source src="assets/lorax.mp4" type="video/mp4"/>
-    </video>
-    <div class="hero-wrap">
-      <article class="card pad" aria-labelledby="hero-title">
-        <span class="tag"><span class="dot"></span>Accessible tools • Community impact</span>
-        <h1 id="hero-title" class="title">Improving People, Processes, & Technology</h1>
-        <p class="lead">Urban analytics and interactive tools that turn data into community impact.</p>
-        <div class="cta-row" role="group" aria-label="Primary actions">
-          <a class="btn primary" href="#services">Explore our services</a>
-          <a class="btn ghost" href="projects.html#featured">View the flagship</a>
-          <a class="btn" href="projects.html#romo-collab">RomoGIS collaboration</a>
-        </div>
-        <div class="tts-controls" aria-label="Text to speech controls">
-          <button class="tts-btn" id="tts-play-hero" aria-label="Play narration">Play narration</button>
-          <button class="tts-btn" id="tts-pause-hero" aria-label="Pause narration">Pause</button>
-          <button class="tts-btn" id="tts-stop-hero" aria-label="Stop narration">Stop</button>
-        </div>
-      </article>
-
-      <aside class="card pad" aria-labelledby="why-matters-title">
-        <h2 id="why-matters-title" class="h2">Why this matters</h2>
-        <p class="p">
-          Maps shape narratives. Narratives shape policy. Policy shapes lives.
-          Desert Drops builds tools that listen—to residents, histories, and futures—and turns them into practical pathways for equity.
-        </p>
-        <hr class="divider"/>
-        <div class="list" aria-label="Core pillars">
-          <div class="item">
-            <div class="icon" aria-hidden="true"></div>
-            <div>
-              <strong>Community‑first design</strong>
-              <p class="p">Center lived experience and local expertise. Let residents define success, then measure toward it.</p>
-            </div>
-          </div>
-          <div class="item">
-            <div class="icon" aria-hidden="true"></div>
-            <div>
-              <strong>Transparent storytelling</strong>
-              <p class="p">Illuminate inequities without sensationalizing—and highlight solutions with humility and rigor.</p>
-            </div>
-          </div>
-          <div class="item">
-            <div class="icon" aria-hidden="true"></div>
-            <div>
-              <strong>Impact over optics</strong>
-              <p class="p">Focus on outcomes that shift conditions on the ground, not vanity metrics or performative dashboards.</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <!-- Services deep dive -->
-  <section id="services" class="section" aria-labelledby="services-title">
-    <span class="tag"><span class="dot"></span>Services</span>
-    <h2 id="services-title" class="h2">Our services — built for decisions</h2>
-
+  <section class="section" aria-label="Reviews intro">
     <article class="card pad">
-      <div class="grid-2">
-        <div>
-          <h3 class="h2" style="font-size:22px;">Water Calculator</h3>
-          <p class="p">Estimate usage, set goals, and reduce waste. Fast, bilingual, and accessible across devices.</p>
-          <div class="grid-auto">
-            <article class="card pad"><strong>Case Study</strong><p class="p">Phoenix households cut consumption by 18% in one summer.</p></article>
-            <article class="card pad"><strong>Feature set</strong><p class="p">Scenario inputs, target goals, household profiles, and downloadable results.</p></article>
-            <article class="card pad"><strong>Testimonial</strong><p class="p">“Made our water use visible and actionable.” — Resident</p></article>
-            <article class="card pad"><strong>Bilingual quote</strong><p class="p"><em>English:</em> “Every drop counts.” <em>Spanish:</em> “Cada gota cuenta.”</p></article>
-          </div>
-          <div class="cta-row">
-            <a class="btn primary" href="services.html#water-calculator">Use the calculator</a>
-            <a class="btn" href="projects.html#case-studies">See outcomes</a>
-          </div>
-        </div>
-        <div>
-          <div class="media" aria-label="Water calculator demo">
-            <img src="assets/ye.png" alt="Water calculator mockup"/>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <article class="card pad">
-      <div class="grid-2">
-        <div>
-          <h3 class="h2" style="font-size:22px;">Conservation Map</h3>
-          <p class="p">An interactive map that turns markers into narratives: restoration, cleanups, rain gardens, and more.</p>
-          <div class="grid-auto">
-            <article class="card pad"><strong>Story modules</strong><p class="p">Photos, captions, transcripts, and multilingual summaries.</p></article>
-            <article class="card pad"><strong>Community inputs</strong><p class="p">Crowdsourced data with moderation and consent workflow.</p></article>
-            <article class="card pad"><strong>Testimonial</strong><p class="p">“Connected our project to a global movement.” — Organizer</p></article>
-          </div>
-          <div class="cta-row">
-            <a class="btn primary" href="services.html#conservation-map">Explore the map</a>
-            <a class="btn" href="projects.html#mapping-extended">See mapping stories</a>
-          </div>
-        </div>
-        <div>
-          <div class="media" aria-label="Conservation map demo">
-            <img src="assets/mem2.png" alt="Conservation map mockup"/>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <article class="card pad">
-      <div class="grid-2">
-        <div>
-          <h3 class="h2" style="font-size:22px;">NASA‑powered Weather</h3>
-          <p class="p">Satellite overlays and forecasts that help residents and farmers plan for heat, storms, and drought.</p>
-          <div class="grid-auto">
-            <article class="card pad"><strong>Use cases</strong><p class="p">Irrigation planning, cooling alerts, and event logistics.</p></article>
-            <article class="card pad"><strong>Testimonial</strong><p class="p">“It wasn’t just data — it was safety.” — Farmer</p></article>
-            <article class="card pad"><strong>Equity lens</strong><p class="p">Shade gap overlays, cooling asset proximity, and routing.</p></article>
-          </div>
-          <div class="cta-row">
-            <a class="btn primary" href="#weather">Check live weather</a>
-            <a class="btn" href="projects.html#upcoming-2-details">See HeatSafe Atlas concept</a>
-          </div>
-        </div>
-        <div>
-          <div class="media" aria-label="NASA weather demo">
-            <img src="assets/eh.png" alt="NASA weather overlays"/>
-          </div>
-        </div>
-      </div>
+      <h1 class="title">Reviews that fuel the movement</h1>
+      <p class="p">Real voices, big energy. A finite grid of praise — and space for yours to join in.</p>
     </article>
   </section>
 
-  <!-- Meet the creator — extended -->
-  <section id="ceo" class="section" aria-labelledby="ceo-title">
-    <span class="tag"><span class="dot"></span>Creator</span>
-    <h2 id="ceo-title" class="h2">Meet the creator — Aniketh</h2>
-
-    <article class="card pad">
-      <div class="grid-2">
-        <div>
-          <p class="p">
-            Hi! I’m Aniketh — a creative technologist blending urban analytics, geospatial storytelling, and accessible web craft.
-            I build tools that make decisions easier, narratives clearer, and collaboration cleaner.
-          </p>
-          <hr class="divider"/>
-          <div class="list" aria-label="Creator pillars">
-            <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Accessibility</strong><p class="p">Screen reader parity, captions, transcripts, bilingual support, and keyboard controls.</p></div></div>
-            <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Performance</strong><p class="p">Lazy loading, disciplined assets, minimal layout thrash — optimized for real devices.</p></div></div>
-            <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Workflow hygiene</strong><p class="p">Version control, clear repos, separated code/data, and documented patterns.</p></div></div>
-          </div>
-        </div>
-        <div>
-          <div class="media" aria-label="Creator portrait or project collage">
-            <img src="assets/wh.jpeg" alt="Community workshop and project collage"/>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <article class="card pad" aria-label="Creator timeline">
-      <h3 class="h2" style="font-size:22px;">Timeline</h3>
-      <div class="grid-auto">
-        <article class="card pad"><strong>Early curiosity</strong><p class="p">Explored how maps tell stories and move people to action.</p></article>
-        <article class="card pad"><strong>Urban analytics</strong><p class="p">Built tools that turn data into choices for residents and planners.</p></article>
-        <article class="card pad"><strong>Community impact</strong><p class="p">Co‑created projects with neighbors, organizers, and educators.</p></article>
-      </div>
-    </article>
-
-    <article class="card pad" aria-label="Bilingual quotes">
-      <h3 class="h2" style="font-size:22px;">Bilingual quotes</h3>
-      <div class="grid-auto">
-        <article class="card pad"><p class="p"><strong>English:</strong> “Every drop counts. Conservation is community.”</p><p class="p"><strong>Spanish:</strong> “Cada gota cuenta. La conservación es comunidad.”</p></article>
-        <article class="card pad"><p class="p"><strong>English:</strong> “Maps tell stories of resilience.”</p><p class="p"><strong>Hindi:</strong> “नक्शे लचीलेपन की कहानियाँ बताते हैं।”</p></article>
-      </div>
-    </article>
+  <section class="section" aria-label="Reviews grid">
+    <div class="grid" id="grid"></div>
   </section>
 
-  <!-- Contact -->
-  <section id="contact" class="section" aria-labelledby="contact-title">
-    <span class="tag"><span class="dot"></span>Contact</span>
-    <h2 id="contact-title" class="h2">Let’s collaborate</h2>
+  <section class="section" aria-label="Leave a review">
     <article class="card pad">
-      <form id="contactForm" class="list" aria-label="Contact form">
-        <label class="item" for="contactName">
-          <div class="icon" aria-hidden="true"></div>
-          <div>
-            <strong>Your Name</strong>
-            <input id="contactName" name="name" type="text" placeholder="Your name" aria-required="true"
-                   style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
-          </div>
-        </label>
-        <label class="item" for="contactEmail">
-          <div class="icon" aria-hidden="true"></div>
-          <div>
-            <strong>Email</strong>
-            <input id="contactEmail" name="email" type="email" placeholder="you@example.com" aria-required="true"
-                   style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
-          </div>
-        </label>
-        <label class="item" for="contactSubject">
-          <div class="icon" aria-hidden="true"></div>
-          <div>
-            <strong>Subject</strong>
-            <input id="contactSubject" name="subject" type="text" placeholder="Project or collaboration topic" aria-required="true"
-                   style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
-          </div>
-        </label>
-        <label class="item" for="contactMessage">
-          <div class="icon" aria-hidden="true"></div>
-          <div>
-            <strong>Your Message</strong>
-            <textarea id="contactMessage" name="message" rows="4" placeholder="Tell us about your work and how we can help."
-                      style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);"></textarea>
-          </div>
-        </label>
-        <div class="cta-row">
-          <button type="submit" class="btn primary">Send</button>
-          <button type="reset" class="btn">Reset</button>
-        </div>
-        <div id="contactStatus" class="p" aria-live="polite"></div>
+      <h2 class="h2">Leave your own review</h2>
+      <form id="reviewForm" class="controls">
+        <input class="input" type="text" id="name" placeholder="Your name" required>
+        <select class="select" id="rating" required>
+          <option value="">Rating</option>
+          <option value="5">★★★★★</option>
+          <option value="4">★★★★☆</option>
+          <option value="3">★★★☆☆</option>
+          <option value="2">★★☆☆☆</option>
+          <option value="1">★☆☆☆☆</option>
+        </select>
+        <input class="input" type="text" id="quote" placeholder="Your thoughts…" required>
+        <button class="btn primary" type="submit">Submit</button>
       </form>
     </article>
-
-    <article class="card pad" aria-label="Collaboration FAQ">
-      <h3 class="h2" style="font-size:22px;">Collaboration FAQ</h3>
-      <div class="list">
-        <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>How do we start?</strong><p class="p">Brief, prototype, iterate, ship — tight cycles that keep quality high.</p></div></div>
-        <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>What’s the workflow?</strong><p class="p">Version control, clear repos, tidy handoffs, and accessible outputs.</p></div></div>
-        <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>What about accessibility?</strong><p class="p">Screen reader support, captions, transcripts, bilingual content, and keyboard controls.</p></div></div>
-      </div>
-    </article>
   </section>
 
-  <!-- Weather -->
-  <section id="weather" class="section" aria-labelledby="weather-title">
-    <span class="tag"><span class="dot"></span>Live weather</span>
-    <h2 id="weather-title" class="h2">Live weather by city</h2>
-    <article class="card pad">
-      <div class="tts-controls" aria-label="Weather TTS controls">
-        <button class="tts-btn" id="tts-play-weather">Play narration</button>
-        <button class="tts-btn" id="tts-pause-weather">Pause</button>
-        <button class="tts-btn" id="tts-stop-weather">Stop</button>
-      </div>
-      <form id="weatherForm" aria-describedby="weatherResult" class="list" style="margin-top:10px;">
-        <label class="item" for="cityInput">
-          <div class="icon" aria-hidden="true"></div>
-          <div>
-            <strong>City name</strong>
-            <input type="text" id="cityInput" placeholder="Los Angeles, CA" required
-                   style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
+  <footer class="footer" role="contentinfo">
+    <div>© 2025 • Desert Drops Studio — Reviews</div>
+    <div><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
+  </footer>
+
+  <script>
+    // Seed reviews — finite, human voices
+    const seed = [
+      { id:'r1', name:'Aisha R.', rating:5, date:'2025-11-02', quote:'Built with heart and rigor. The site feels alive — fast, accessible, and human.' },
+      { id:'r2', name:'Marco P.', rating:5, date:'2025-10-28', quote:'Conservation map made me cry. It honors people, not just pins.' },
+      { id:'r3', name:'Priya S.', rating:4, date:'2025-10-09', quote:'NASA weather is clean and useful. I check it daily before bike commutes.' },
+      { id:'r4', name:'Nate C.', rating:5, date:'2025-09-21', quote:'Equity playbook is the blueprint I wish we had years ago.' },
+      { id:'r5', name:'Lina M.', rating:5, date:'2025-09-02', quote:'It’s not a product — it’s a movement. Every page respects the reader.' },
+      { id:'r6', name:'Omar J.', rating:4, date:'2025-08-15', quote:'Performance is insane. Loads instantly even on my old phone.' },
+      { id:'r7', name:'Aria K.', rating:5, date:'2025-07-12', quote:'Accessibility isn’t an afterthought here; it leads.' },
+      { id:'r8', name:'Diego V.', rating:4, date:'2025-06-30', quote:'Maps that listen first — finally.' },
+      { id:'r9', name:'Noor Y.', rating:5, date:'2025-06-10', quote:'The water calculator changed our daily routines.' },
+      { id:'r10', name:'Kai W.', rating:3, date:'2025-05-25', quote:'Heat-safe overlays we can actually use.' }
+    ];
+
+    let reviews = [...seed];
+
+    const grid = document.getElementById('grid');
+    const form = document.getElementById('reviewForm');
+    const nameInput = document.getElementById('name');
+    const ratingInput = document.getElementById('rating');
+    const quoteInput = document.getElementById('quote');
+
+    function stars(n){
+      return '★★★★★'.slice(0,n) + '☆☆☆☆☆'.slice(0,5-n);
+    }
+
+    function cardHTML(r){
+      const deleteBtn = r.id.startsWith('u')
+        ? `<button class="delete-btn" aria-label="Delete your review" data-id="${r.id}">Delete</button>`
+        : '';
+      return `
+        <article class="review-card" id="${r.id}">
+          <div class="pad">
+            <div class="meta"><span class="name">${r.name}</span> • <span>${r.date}</span></div>
+            <div class="stars" aria-label="${r.rating} out of 5 stars">${stars(r.rating)}</div>
+            <p class="quote">“${r.quote}”</p>
+            ${deleteBtn}
           </div>
-        </label>
-        <div class="cta-row">
-          <button type="submit" class="btn primary">Get weather</button>
-        </div>
-      </form>
-      <div id="weatherResult" class="p" aria-live="polite" style="margin-top:8px;"></div>
-      <p class="p">Powered by Open-Meteo. Forecast link opens Weather.com for your city.</p>
-    </article>
-  </section>
+        </article>
+      `;
+    }
 
-  <!-- Bulletin -->
-  <section id="bulletin" class="section" aria-labelledby="bulletin-title">
-    <span class="tag"><span class="dot"></span>Community bulletin</span>
-    <h2 id="bulletin-title" class="h2">Bulletin board</h2>
-    <article class="card pad">
-      <div class="tts-controls" aria-label="Bulletin TTS controls">
-        <button class="tts-btn" id="tts-play-bulletin">Play narration</button>
-        <button class="tts-btn" id="tts-pause-bulletin">Pause</button>
-        <button class="tts-btn" id="tts-stop-bulletin">Stop</button>
-      </div>
-      <form id="commentForm" aria-describedby="commentList" class="list" style="margin-top:10px;">
-        <label class="item" for="commentAuthor">
-          <div class="icon" aria-hidden="true"></div>
-          <div>
-            <strong>Your name</strong>
-            <input type="text" id="commentAuthor" required
-                   style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
-          </div>
-        </label>
-        <label class="item" for="commentText">
-          <div class="icon" aria-hidden="true"></div>
-          <div>
-            <strong>Your thought</strong>
-            <textarea id="commentText" rows="3" required
-                      style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);"></textarea>
-          </div>
-        </label>
-        <div class="cta-row"><button type="submit" class="btn primary">Post</button></div>
-      </form>
-      <ul id="commentList" class="list" style="list-style:none; padding:0;"></ul>
-      <p class="p">Comments are stored in your browser. You can delete your own posts.</p>
-    </article>
-  </section>
+    function render(list){
+      grid.innerHTML = list.map(cardHTML).join('');
+    }
 
-  <!-- Resources -->
-  <section id="resources" class="section" aria-labelledby="resources-title">
-    <span class="tag"><span class="dot"></span>Resource links</span>
-    <h2 id="resources-title" class="h2">Resource links</h2>
-    <article class="card pad">
-      <div class="tts-controls" aria-label="Resources TTS controls">
-        <button class="tts-btn" id="tts-play-resources">Play narration</button>
-        <button class="tts-btn" id="tts-pause-resources">Pause</button>
-        <button class="tts-btn" id="tts-stop-resources">Stop</button>
-      </div>
-      <ul class="list" style="margin-top:10px;">
-        <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>University of Arizona</strong><p class="p"><a href="https://wrrc.arizona.edu/" target="_blank" rel="noopener">Research on water resources</a></p></div></li>
-        <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>EPA WaterSense</strong><p class="p"><a href="https://www.epa.gov/watersense" target="_blank" rel="noopener">Efficiency programs and guidance</a></p></div></li>
-        <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>UN Water Facts</strong><p class="p"><a href="https://www.unwater.org/water-facts" target="_blank" rel="noopener">Global water insights</a></p></div></li>
-        <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>Weather.com</strong><p class="p"><a href="https://www.weather.com" target="_blank" rel="noopener">Forecasts and alerts</a></p></div></li>
-        <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>RomoGIS Enterprises</strong><p class="p"><a href="https://romogis.com" target="_blank" rel="noopener">Frank Romo — GIS for Good</a></p></div></li>
-      </ul>
-    </article>
-  </section>
+    // Initial render
+    render(reviews);
+
+    // Add new review (1–5 stars), mark user reviews with 'u' id so only they get delete
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const rating = parseInt(ratingInput.value, 10);
+      const quote = quoteInput.value.trim();
+      if (!name || !quote || !(rating >= 1 && rating <= 5)) return;
+
+      const date = new Date().toISOString().slice(0,10);
+      const newReview = { id:'u'+Date.now(), name, rating, date, quote };
+      reviews.push(newReview);
+      render(reviews);
+      form.reset();
+      nameInput.focus();
+    });
+
+    // Delegated delete: only user-submitted reviews have a delete button
+    grid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.delete-btn');
+      if (!btn) return;
+      const id = btn.getAttribute('data-id');
+      reviews = reviews.filter(r => r.id !== id);
+      render(reviews);
+    });
+  </script>
+</body>
+</html>
