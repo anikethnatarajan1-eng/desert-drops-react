@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Title & Description -->
+  <title>Projects — Desert Drops Studio</title>
+  <meta name="description" content="Projects that blend urban analytics, geospatial storytelling, and accessible web tools. Fresh, fast, and community-first.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+
+  <!-- Tribute-style base -->
+  <style>
+    :root {
+      --bg: #0b0e12;
+      --card: #12161d;
+      --text: #e9eef8;
+      --muted: #a9b3c7;
+      --accent: #ffffff;
+      --accent-2: #9ef0a7;
+      --danger: #ff6b6b;
+      --shadow: 0 14px 40px rgba(0,0,0,0.45);
+      --radius: 14px;
+      --gap: 18px;
+      --container: min(1100px, 92vw);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% 0%, #0e141b, var(--bg)),
+        radial-gradient(1000px 600px at 90% 110%, #0e141b, var(--bg));
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      line-height: 1.5;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header & Nav */
+    header {
+      position: sticky; top: 0; z-index: 30;
+      backdrop-filter: saturate(120%) blur(8px);
+      background: rgba(18,22,29,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      width: var(--container); margin: 0 auto; padding: 14px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: 0.2px; }
+    .brand .logo {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 6px 18px rgba(255,255,255,0.35);
+    }
+    .brand .text { color: var(--text); font-weight: 800; }
+    .nav-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .nav-links a {
+      padding: 8px 12px; border-radius: 8px; transition: background 0.2s ease; color: var(--text);
+    }
+    .nav-links a:hover { background: rgba(255,255,255,0.06); }
+    .nav-links .active { border: 1px solid rgba(255,255,255,0.12); }
+
+    /* Layout */
+    .section { width: var(--container); margin: 28px auto; display: grid; gap: var(--gap); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+    .grid-auto { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .pad { padding: 22px; }
+
+    .title { font-size: clamp(26px, 5vw, 44px); font-weight: 800; margin: 12px 0 10px; }
+    .h2 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; margin: 8px 0 10px; }
+    .lead { color: var(--muted); font-size: clamp(14px, 1.6vw, 18px); margin-bottom: 16px; }
+    .p { color: var(--muted); margin: 0 0 12px; }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
+      color: var(--muted); border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+    }
+    .tag .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px rgba(255,255,255,0.25); }
+
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 12px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: var(--text);
+      transition: transform 0.06s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.09); }
+    .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #071016; border: none; box-shadow: 0 12px 28px rgba(255,255,255,0.35); }
+    .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.14); }
+
+    /* Divider */
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); border: none; margin: 10px 0 16px; }
+
+    /* List items */
+    .list { display: grid; gap: 10px; }
+    .item {
+      display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start;
+      padding: 12px; border-radius: 12px; background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .item .icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: linear-gradient(135deg, #ffe085, #ffad7a);
+      box-shadow: 0 8px 20px rgba(255,173,122,0.25);
+    }
+
+    /* Media: tribute + GIS overlay behaviour */
+    .thumb, .project-thumb {
+      position: relative; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08); background: #0f1319;
+    }
+    .thumb img, .project-thumb img, .project-thumb video, .project-thumb iframe {
+      width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;
+    }
+    .project-thumb:hover img { transform: scale(1.05); }
+
+    .project-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.70); color: #fff;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      opacity: 0; transition: opacity 0.3s ease; padding: 20px; text-align: center;
+    }
+    .project-thumb:hover .project-overlay { opacity: 1; }
+    .project-overlay h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+    .project-overlay p { font-size: 14px; max-height: 120px; overflow-y: auto; margin-top: 10px; padding-right: 6px; }
+    .project-overlay button {
+      margin-top: 8px; padding: 10px 14px; border-radius: 10px; font-weight: 700; border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #071016; box-shadow: 0 8px 20px rgba(255,255,255,0.25); cursor: pointer;
+    }
+
+    /* Accessibility helpers */
+    .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+    .tts-controls { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .tts-btn { padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); color: var(--text); font-weight: 600; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header role="banner" aria-label="Primary navigation">
+    <div class="nav">
+      <div class="brand" aria-label="Site brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="index.html" class="text">Desert Drops</a>
+      </div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="projects.html">Projects</a>
+        <a href="gis.html">GIS for Good</a>
+        <a href="articles.html">Articles</a>
+        <a href="qna.html">Q&A</a>
+        <a href="resource.html">Resources</a>  
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section aria-label="Projects hero">
+    <div class="section grid-2" style="align-items:center;">
+      <article class="card pad" aria-labelledby="hero-title">
+        <span class="tag"><span class="dot"></span>Fresh builds • Geospatial stories • Accessible polish</span>
+        <h1 id="hero-title" class="title">Projects that turn data into decisions</h1>
+        <p class="lead">
+          This living gallery showcases a flagship launch, bold concepts in the pipeline, and collaborations that set ethical standards.
+        </p>
+        <div class="cta-row" role="group" aria-label="Primary actions">
+          <a class="btn primary" href="#featured">View the flagship</a>
+          <a class="btn ghost" href="#pipeline">Upcoming work</a>
+          <a class="btn" href="#collab">RomoGIS collaboration</a>
+        </div>
+        <div class="tts-controls" aria-label="Text to speech controls">
+          <button class="tts-btn" id="tts-play">Play narration</button>
+          <button class="tts-btn" id="tts-pause">Pause</button>
+          <button class="tts-btn" id="tts-stop">Stop</button>
+        </div>
+      </article>
+      <aside class="card pad" aria-labelledby="hero-media-title">
+        <h2 id="hero-media-title" class="h2">Cinematic background</h2>
+        <div class="project-thumb" aria-label="Hero background video">
+          <video autoplay loop muted playsinline>
+            <source src="assets/lorax.mp4" type="video/mp4" />
+          </video>
+          <!-- Overlay intentionally omitted for hero -->
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Combined Services + GIS Cards -->
+<section id="combined-projects" class="section" aria-labelledby="combined-title">
+  <span class="tag"><span class="dot"></span>Services + GIS</span>
+  <h2 id="combined-title" class="h2">Technology should serve people</h2>
+  <p class="p">
+    These tools are practical, accessible, and tuned for real-world decisions — water conservation, community mapping, weather resilience, and equity visualization.
+  </p>
+
+  <div class="grid-auto">
+    <!-- Water Calculator -->
+    <article class="card pad">
+      <div class="project-thumb">
+        <img src="assets/waterlogo.png" alt="Water Calculator logo preview" />
+        <div class="project-overlay">
+          <h3>Water Calculator</h3>
+          <button onclick="window.location.href='calculator.html'">Learn More</button>
+          <p>Make conservation personal. Enter everyday details to see your water footprint come to life — small changes add up.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Conservation Map -->
+    <article class="card pad">
+      <div class="project-thumb">
+        <img src="assets/meow.jpg" alt="Conservation Map preview image" />
+        <div class="project-overlay">
+          <h3>Conservation Map</h3>
+          <button onclick="window.location.href='map.html'">Learn More</button>
+          <p>A living atlas of hope. Each marker represents a real effort — rivers restored, community projects, resilience stories.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- NASA Weather -->
+    <article class="card pad">
+      <div class="project-thumb">
+        <img src="assets/gotye.jpg" alt="NASA Weather services preview image" />
+        <div class="project-overlay">
+          <h3>NASA‑Powered Weather Services</h3>
+          <button onclick="window.location.href='nasa.html'">Learn More</button>
+          <p>Satellite data, human outcomes. Forecasts and overlays that help farmers, planners, and families prepare and adapt.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- US Map Visualization -->
+    <article class="card pad">
+      <div class="project-thumb">
+        <img src="assets/us-map-viz.png" alt="US map with distributed data points" />
+        <div class="project-overlay">
+          <h3>National Data Visualization</h3>
+          <button onclick="window.location.href='articles.html#usmap'">Click here</button>
+          <p>Interactive US visualization of community indicators. Explore patterns, hotspots, and equity metrics.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Contra Costa Equity -->
+    <article class="card pad">
+      <div class="project-thumb">
+        <img src="assets/contra-costa-equity.png" alt="Contra Costa County health equity map" />
+        <div class="project-overlay">
+          <h3>Contra Costa Health Equity</h3>
+          <button onclick="window.location.href='articles.html#contracosta'">Click here</button>
+          <p>Health equity for Black communities in Contra Costa County. Layered overlays and transparent methods that honor local expertise.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Upper Peninsula -->
+    <article class="card pad">
+      <div class="project-thumb">
+        <img src="assets/up-michigan.png" alt="Upper Peninsula Michigan demographic map" />
+        <div class="project-overlay">
+          <h3>Upper Peninsula Demographics</h3>
+          <button onclick="window.location.href='articles.html#up'">Click here</button>
+          <p>Region-level overlays showing demographic and health indicators. Scroll through notes to understand context and implications.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- GIS & Drone Camp -->
+    <article class="card pad">
+      <div class="project-thumb">
+        <img src="assets/gis-drone-camp.png" alt="Group photo from GIS & Drone Summer Camp" />
+        <div class="project-overlay">
+          <h3>GIS & Drone Summer Camp</h3>
+          <button onclick="window.location.href='articles.html#camp'">Click here</button>
+          <p>Learning modules for youth: data literacy, drone mapping basics, and storytelling. Built for curiosity, safety, and impact.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+  <!-- Featured Project -->
+  <section id="featured" class="section" aria-labelledby="featured-title">
+    <span class="tag"><span class="dot"></span>Launch • 2025</span>
+    <h2 id="featured-title" class="h2">Flagship: Desert Drops — Urban Analytics Hub</h2>
+
+    <article class="card pad" aria-label="Featured project details">
+      <div class="grid-2">
+        <div>
+          <div class="project-thumb">
+            <img src="assets/ye.png" alt="Desert Drops flagship hero image" />
+            <div class="project-overlay">
+              <h3>Desert Drops Studio</h3>
+              <button onclick="window.location.href='index.html'">Click here</button>
+              <p>Fast, accessible, and community-first. Cinematic hero, bilingual blocks, TTS, clean workflows, and real-world modules for impact.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 class="h2" style="font-size: 22px;">Where data meets community</h3>
+          <p class="p">
+            A website tuned for decisions, not spectacle. Every interaction respects user needs and device realities. Accessibility and performance are baseline.
+          </p>
+          <hr class="divider" />
+          <ul class="list" aria-label="Feature pillars">
+            <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>Accessibility first</strong><p class="p">Screen reader parity, captions, transcripts, and keyboard controls baked in.</p></div></li>
+            <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>Performance hygiene</strong><p class="p">Lazy loading, disciplined assets, and minimal layout thrash — quick on real devices.</p></div></li>
+            <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>Clean workflows</strong><p class="p">Version control, separated code/data, documented patterns, and smooth deploys.</p></div></li>
+          </ul>
+          <div class="cta-row">
+            <a class="btn primary" href="index.html">Visit site</a>
+            <a class="btn" href="articles.html">Read notes</a>
+            <a class="btn ghost" href="resource.html">Explore resources</a>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+      <div class="grid-auto" aria-label="Feature highlights">
+        <article class="card pad"><strong>Hero with cinematic video</strong><p class="p">Full-width background video, translucent text bubble, and accessible controls.</p></article>
+        <article class="card pad"><strong>Service trio</strong><p class="p">Water Calculator, Conservation Map, and NASA Weather — each with deep dives.</p></article>
+        <article class="card pad"><strong>Community modules</strong><p class="p">FAQ, Bulletin, Resources, Romo tribute, Sustainability, and Mapping for Good.</p></article>
+      </div>
+    </article>
+  </section>
+
+  <!-- Pipeline -->
+  <section id="pipeline" class="section" aria-labelledby="pipeline-title">
+    <span class="tag"><span class="dot"></span>Pipeline</span>
+    <h2 id="pipeline-title" class="h2">Upcoming projects</h2>
+    <p class="p">A fresh pipeline: a concept shaping up and a collaboration to set the bar high.</p>
+
+    <article class="card pad" aria-label="HeatSafe concept">
+      <div class="grid-2">
+        <div>
+          <div class="project-thumb">
+            <img src="assets/eh.png" alt="City heat maps and equity overlays" />
+            <div class="project-overlay">
+              <h3>HeatSafe Atlas Concept</h3>
+              <button onclick="window.location.href='#upcoming-2-details'">Click here</button>
+              <p>Visualize urban heat, shade gaps, and cooling assets. Route people to relief. Blend open data, NASA imagery, and community inputs.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="tag"><span class="dot"></span>Concept • 2026</div>
+          <h3 class="h2" style="font-size: 22px;">Equitable cooling for cities</h3>
+          <p class="p">A city-scale platform prioritizing investments where it matters most. Equity overlays, routing, and community participation.</p>
+          <div class="cta-row">
+            <a class="btn primary" href="#upcoming-2-details">See concept</a>
+            <a class="btn" href="#collab">Collab notes</a>
+            <a class="btn ghost" href="#contact">Get involved</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="card pad" aria-label="Playbook collaboration">
+      <div class="grid-2">
+        <div>
+          <div class="project-thumb">
+            <img src="assets/ê.jpeg" alt="Community workshop with maps" />
+            <div class="project-overlay">
+              <h3>Equity Mapping Playbook</h3>
+              <button onclick="window.location.href='#collab'">Click here</button>
+              <p>Co-created toolkit: listen first, clarify questions, select ethical data, annotate with care, publish accessibly. Democratize GIS.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="tag"><span class="dot"></span>TBD • with RomoGIS</div>
+          <h3 class="h2" style="font-size: 22px;">Co-created standards</h3>
+          <p class="p">Reflect the philosophy of transparent storytelling and community outcomes. Build tools that travel and teach.</p>
+          <div class="cta-row">
+            <a class="btn primary" href="#collab">Collaboration vision</a>
+            <a class="btn" href="#extended-articles">Read principles</a>
+            <a class="btn ghost" href="#contact">Propose a pilot</a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Concept deep dive -->
+  <section id="upcoming-2-details" class="section" aria-labelledby="upcoming-2-title">
+    <div class="tag"><span class="dot"></span>Concept • 2026</div>
+    <h2 id="upcoming-2-title" class="h2">HeatSafe Atlas — deep dive</h2>
+    <article class="card pad">
+      <div class="grid-2">
+        <div>
+          <div class="project-thumb">
+            <img src="assets/mem2.png" alt="HeatSafe Atlas overlays mockup" />
+            <div class="project-overlay">
+              <h3>Equity Overlays</h3>
+              <button onclick="window.location.href='#extended-articles'">Click here</button>
+              <p>Highlight vulnerable populations, quantify access gaps, and support decisions with humility and rigor.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="p">Blend NASA imagery, local datasets, and community inputs to prioritize cooling investments and guide routes to relief.</p>
+          <div class="grid-auto">
+            <article class="card pad"><strong>Routing engine</strong><p class="p">Direct residents to libraries, parks, splash pads, and centers.</p></article>
+            <article class="card pad"><strong>Community input</strong><p class="p">Crowdsourced data ensures lived experience shapes the map.</p></article>
+            <article class="card pad"><strong>Open methods</strong><p class="p">Share approaches and lessons. Let good work scale and travel.</p></article>
+          </div>
+          <div class="cta-row">
+            <a class="btn primary" href="#collab">See RomoGIS collab</a>
+            <a class="btn" href="#media">Demo media</a>
+            <a class="btn ghost" href="#contact">Get involved</a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Collaboration -->
+  <section id="collab" class="section" aria-labelledby="collab-title">
+    <div class="tag"><span class="dot"></span>TBD • Collaboration</div>
+    <h2 id="collab-title" class="h2">Collaboration with RomoGIS — Equity Mapping Playbook</h2>
+    <article class="card pad">
+      <div class="grid-2">
+        <div>
+          <div class="project-thumb">
+            <img src="assets/wh.jpeg" alt="RomoGIS workshop" />
+            <div class="project-overlay">
+              <h3>RomoGIS Workshop</h3>
+              <button onclick="window.location.href='gis.html'">Click here</button>
+              <p>Co-create tools with partners, credit community labor, and make the craft visible — so others can learn and build too.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="p">Teach teams to map with integrity: listen first, clarify questions, select ethical data, annotate with care, publish accessibly.</p>
+          <div class="grid-auto">
+            <article class="card pad"><strong>Listen first</strong><p class="p">Community voices shape questions before data is gathered.</p></article>
+            <article class="card pad"><strong>Ethical data</strong><p class="p">Consent, privacy, precision about uncertainty and risk.</p></article>
+            <article class="card pad"><strong>Accessible outputs</strong><p class="p">Maps with captions, transcripts, and bilingual support.</p></article>
+          </div>
+          <div class="cta-row">
+            <a class="btn primary" href="#extended-articles">Read principles</a>
+            <a class="btn" href="#partners">Partner shout‑outs</a>
+            <a class="btn ghost" href="#contact">Propose a pilot</a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Extended FAQ -->
+  <section id="faq" class="section" aria-labelledby="faq-title">
+    <h2 id="faq-title" class="h2">Extended FAQ</h2>
+    <p class="p">Answers to common questions about HeatSafe Atlas, RomoGIS, and collaboration.</p>
+    <article class="card pad">
+      <div class="list accordion" role="region" aria-labelledby="faq-title">
+        <div class="item">
+          <button class="accordion-toggle" aria-expanded="false" aria-controls="faq1" id="faq1-btn">
+            <span class="icon" aria-hidden="true"></span>
+            <div><strong>How does HeatSafe Atlas use NASA data?</strong></div>
+          </button>
+          <div class="accordion-content" id="faq1" role="region" aria-labelledby="faq1-btn" style="display:none;">
+            <p class="p">Integrates satellite imagery to detect urban heat islands and overlays equity data to highlight vulnerability.</p>
+          </div>
+        </div>
+        <div class="item">
+          <button class="accordion-toggle" aria-expanded="false" aria-controls="faq2" id="faq2-btn">
+            <span class="icon" aria-hidden="true"></span>
+            <div><strong>What is RomoGIS’s philosophy?</strong></div>
+          </button>
+          <div class="accordion-content" id="faq2" role="region" aria-labelledby="faq2-btn" style="display:none;">
+            <p class="p"><strong>GIS for Good</strong> — democratized data, transparent storytelling, and community-driven outcomes.</p>
+          </div>
+        </div>
+        <div class="item">
+          <button class="accordion-toggle" aria-expanded="false" aria-controls="faq3" id="faq3-btn">
+            <span class="icon" aria-hidden="true"></span>
+            <div><strong>How can I contribute?</strong></div>
+          </button>
+          <div class="accordion-content" id="faq3" role="region" aria-labelledby="faq3-btn" style="display:none;">
+            <p class="p">Join workshops, provide local datasets, or collaborate on pilot projects that advance sustainable urban analytics.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Partners -->
+  <section id="partners" class="section" aria-labelledby="partners-title">
+    <h2 id="partners-title" class="h2">Partners and shout‑outs</h2>
+    <div class="grid-auto">
+      <article class="card pad"><strong>Neighborhood coalitions</strong><p class="p">Priority setting and trust‑building across communities.</p></article>
+      <article class="card pad"><strong>Youth mappers</strong><p class="p">Data literacy and narrative power for the next generation.</p></article>
+      <article class="card pad"><strong>Civic partners</strong><p class="p">Connecting insights to resources, accountability, and support.</p></article>
+    </div>
+  </section>
+
+  <!-- Extended Articles -->
+  <section id="extended-articles" class="section" aria-labelledby="extended-articles-title">
+    <h2 id="extended-articles-title" class="h2">Extended articles & notes</h2>
+    <div class="grid-auto">
+      <article class="card pad"><strong>Building HeatSafe Atlas</strong><p class="p">Blend imagery, local datasets, and community voices to prioritize cooling investments.</p></article>
+      <article class="card pad"><strong>Equity Mapping Playbook</strong><p class="p">Ethical GIS practice: listen first, clarify questions, select ethical data, annotate with care.</p></article>
+      <article class="card pad"><strong>Performance & accessibility</strong><p class="p">Assets, motion, and typography tuned for speed and clarity.</p></article>
+      <article class="card pad"><strong>Community narratives</strong><p class="p">Stories from residents advocating for water resilience and housing justice.</p></article>
+    </div>
+  </section>
+
+  <!-- Closing -->
+  <section id="closing" class="section" aria-labelledby="closing-title">
+    <h2 id="closing-title" class="h2">Closing notes</h2>
+    <article class="card pad">
+      <p class="p">This gallery evolves: flagship launch, pipeline concepts, collaborations, and new GIS-style cards. Every module adds substance, not noise.</p>
+      <p class="p">Desert Drops strives for accessibility, performance, and community impact. Collaborations with ethical partners set new norms for civic tech.</p>
+    </article>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div>© 2025 • Desert Drops Studio — Projects gallery</div>
+    <div><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Accordion toggle (ARIA-aware)
+    document.querySelectorAll('.accordion-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.parentElement.querySelector('.accordion-content');
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        if (content) content.style.display = expanded ? 'none' : 'block';
+      });
+    });
+
+    // TTS controls
+    const ttsText = `Projects that turn data into decisions — flagship, pipeline, collaborations, and new GIS-style cards.`;
+    const synth = window.speechSynthesis;
+    let utterance = null;
+    function speak(text) { if (!synth) return; stop(); utterance = new SpeechSynthesisUtterance(text); utterance.rate = 1; utterance.pitch = 1; utterance.lang = 'en-US'; synth.speak(utterance); }
+    function pause() { if (synth && synth.speaking) synth.pause(); }
+    function resume() { if (synth && synth.paused) synth.resume(); }
+    function stop() { if (synth && synth.speaking) synth.cancel(); utterance = null; }
+    document.getElementById('tts-play')?.addEventListener('click', () => speak(ttsText));
+    document.getElementById('tts-pause')?.addEventListener('click', () => { if (synth.paused) resume(); else pause(); });
+    document.getElementById('tts-stop')?.addEventListener('click', stop);
+  </script>
+</body>
+</html>

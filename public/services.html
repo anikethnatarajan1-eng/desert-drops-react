@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Title & Description -->
+  <title>GIS for Good — Desert Drops</title>
+  <meta name="description" content="Accessible, high-impact GIS for community power: water, conservation mapping, NASA weather. Built for clarity, performance, and real users." />
+
+  <!-- Fonts (tribute aesthetic) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+
+  <!-- Tribute-style base -->
+  <style>
+    :root {
+      --bg: #0b0e12;
+      --card: #12161d;
+      --text: #e9eef8;
+      --muted: #a9b3c7;
+      --accent: #ffffff;
+      --accent-2: #9ef0a7;
+      --danger: #ff6b6b;
+      --shadow: 0 14px 40px rgba(0,0,0,0.45);
+      --radius: 14px;
+      --gap: 18px;
+      --container: min(1100px, 92vw);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% 0%, #0e141b, var(--bg)),
+        radial-gradient(1000px 600px at 90% 110%, #0e141b, var(--bg));
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header & Nav (tribute style) */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(120%) blur(8px);
+      background: rgba(18,22,29,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      width: var(--container); margin: 0 auto; padding: 14px 0;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; letter-spacing: 0.2px;
+    }
+    .brand-logo {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.35);
+    }
+    .brand-text { color: var(--text); font-weight: 800; }
+    .nav-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .nav-links a {
+      padding: 8px 12px; border-radius: 8px; color: var(--text);
+      transition: background 0.2s ease;
+    }
+    .nav-links a:hover { background: rgba(255,255,255,0.06); }
+    .nav-links .active {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    /* Hero (tribute aesthetic) */
+    .hero-section { position: relative; width: 100%; min-height: 60vh; overflow: hidden; }
+    .hero-video {
+      position: absolute; top: 0; left: 0; width: 100vw; height: 100%;
+      object-fit: cover; z-index: 0; opacity: 0.35;
+    }
+    .hero-wrap {
+      position: relative; z-index: 1; width: var(--container); margin: 0 auto; padding: 80px 20px;
+      display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 26px; align-items: center;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .pad { padding: 22px; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+      color: var(--muted); border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+    }
+    .tag .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.25);
+    }
+    .title { font-size: clamp(26px, 5vw, 44px); font-weight: 800; margin: 12px 0 10px; }
+    .lead { color: var(--muted); font-size: clamp(14px, 1.6vw, 18px); margin-bottom: 16px; }
+
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 12px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: var(--text);
+      transition: transform 0.06s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.09); }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #071016; border: none;
+      box-shadow: 0 12px 28px rgba(255,255,255,0.35);
+    }
+    .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.14); }
+
+    /* Sections */
+    .section { width: var(--container); margin: 28px auto; display: grid; gap: 18px; }
+    .section-alt {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px;
+    }
+    .h2 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; margin: 8px 0 6px; }
+    .p { color: var(--muted); margin: 0 0 12px; }
+
+    /* Service rows (preserve your structure, restyle) */
+    .service-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: center; }
+    .service-img {
+      aspect-ratio: 16/9; border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08); background: #0f1319;
+    }
+    .service-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .service-content { display: grid; gap: 10px; }
+    .learn-more {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); color: var(--text);
+    }
+
+    /* Details grid */
+    .details-grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .detail-box {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 16px; display: grid; gap: 10px;
+    }
+    .detail-box img {
+      width: 100%; height: 180px; object-fit: cover; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .detail-link {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); color: var(--text);
+    }
+
+    /* Lists & items */
+    .cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .item { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+    .item .icon {
+      width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #ffe085, #ffad7a);
+      box-shadow: 0 8px 20px rgba(255,173,122,0.25);
+    }
+
+    /* Media grid (kept since your file has media) */
+    .media-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .media {
+      aspect-ratio: 16/9; background: #0f1319; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;
+    }
+    .media iframe, .media video, .media img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+    /* Divider */
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); border: none; margin: 10px 0 16px; }
+
+    /* Accessibility & TTS */
+    .tts-controls, .inline-controls { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .tts-btn, .pause-btn {
+      padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06); color: var(--text); font-weight: 600;
+    }
+
+    /* Accordion */
+    .accordion .item { border-bottom: 1px dashed rgba(255,255,255,0.12); }
+    .accordion-toggle {
+      width: 100%; text-align: left; color: var(--text);
+      background: transparent; border: none; padding: 10px 0; font-weight: 700;
+    }
+    .accordion-content { display: none; padding: 8px 0 12px; color: var(--muted); }
+
+    /* Footer */
+    footer {
+      width: var(--container); margin: 40px auto 80px; color: var(--muted);
+      display: flex; justify-content: space-between; align-items: center; gap: 20px;
+      border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 18px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-section { height: 52vh; }
+      .hero-wrap { grid-template-columns: 1fr; padding: 60px 20px; }
+      .service-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero-section { height: 46vh; }
+      .detail-box img { height: 160px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header role="banner" aria-label="Primary navigation">
+    <div class="nav">
+      <div class="brand" aria-label="Site brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="index.html" class="text">Desert Drops</a>
+      </div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="projects.html">Projects</a>
+        <a href="gis.html">GIS for Good</a>
+        <a href="articles.html">Articles</a>
+        <a href="qna.html">Q&A</a>
+        <a href="resource.html">Resources</a>  
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-section" aria-label="Hero with video and GIS mission">
+    <video autoplay loop muted playsinline class="hero-video" aria-label="Ambient background video">
+      <source src="assets/lorax.mp4" type="video/mp4" />
+    </video>
+
+    <div class="hero-wrap">
+      <article class="card pad" aria-labelledby="hero-title">
+        <span class="tag"><span class="dot"></span>GIS for Good • Equity • Community mapping</span>
+        <h1 id="hero-title" class="title">Mapping power, elevating voices, and building change</h1>
+        <p class="lead">
+          Accessible geospatial tools that turn data into decisions: Water Calculator, Conservation Map, and NASA‑powered weather. Built for clarity, performance, and real users.
+        </p>
+        <div class="cta-row" role="group" aria-label="Primary actions">
+          <a class="btn primary" href="#overview">Explore Our services</a>
+          <a class="btn ghost" href="#details">See deep dives</a>
+          <a class="btn" href="#contact">Collaborate</a>
+        </div>
+        <div class="tts-controls" aria-label="Text to speech controls">
+          <button class="tts-btn" id="tts-play-hero">Play narration</button>
+          <button class="tts-btn" id="tts-pause-hero">Pause</button>
+          <button class="tts-btn" id="tts-stop-hero">Stop</button>
+        </div>
+      </article>
+
+      <aside class="card pad" aria-labelledby="why-title">
+        <h2 id="why-title" class="h2">Why GIS for Good</h2>
+        <p class="p">
+          Maps shape narratives. Narratives shape policy. Policy shapes lives. We design GIS that listens to communities and turns insights into practical pathways for equity.
+        </p>
+        <hr class="divider" />
+        <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Community-first</strong><p class="p">Center lived experience and local expertise.</p></div></div>
+        <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Transparent storytelling</strong><p class="p">Illuminate inequities and highlight solutions with rigor.</p></div></div>
+        <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Impact over optics</strong><p class="p">Focus on outcomes that shift conditions on the ground.</p></div></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section id="overview" class="section section-alt" aria-labelledby="overview-title">
+    <h2 id="overview-title" class="h2">Our GIS services</h2>
+    <p class="p">
+      Technology should serve people. These tools are practical, accessible, and tuned for real-world decisions — water conservation, community mapping, and weather resilience.
+    </p>
+  </section>
+
+  <!-- Water Calculator (preserved content, tribute styling) -->
+  <section class="section service-row" aria-labelledby="water-title">
+    <div class="service-img">
+      <img src="assets/waterlogo.png" alt="Water Calculator logo preview" />
+    </div>
+    <div class="service-content">
+      <h2 id="water-title" class="h2">Water Calculator</h2>
+      <p class="p">
+        Make conservation personal. Enter everyday details to see your water footprint come to life — small changes add up: shorter showers, smarter irrigation, mindful choices.
+      </p>
+      <a class="learn-more" href="#details-water">Learn More</a>
+    </div>
+  </section>
+
+  <!-- Conservation Map -->
+  <section class="section service-row" aria-labelledby="map-title">
+    <div class="service-img">
+      <img src="assets/meow.jpg" alt="Conservation Map preview image" />
+    </div>
+    <div class="service-content">
+      <h2 id="map-title" class="h2">Conservation Map</h2>
+      <p class="p">
+        A living atlas of hope. Each marker represents a real effort — rivers restored, community projects, resilience stories — connecting local actions to a global movement.
+      </p>
+      <a class="learn-more" href="#details-map">Learn More</a>
+    </div>
+  </section>
+
+  <!-- NASA Weather -->
+  <section class="section service-row" aria-labelledby="nasa-title">
+    <div class="service-img">
+      <img src="assets/gotye.jpg" alt="NASA Weather services preview image" />
+    </div>
+    <div class="service-content">
+      <h2 id="nasa-title" class="h2">NASA‑Powered Weather Services</h2>
+      <p class="p">
+        Satellite data, human outcomes. Forecasts and overlays that help farmers, planners, and families prepare and adapt — turning science into community resilience.
+      </p>
+      <a class="learn-more" href="#details-nasa">Learn More</a>
+    </div>
+  </section>
+
+  <!-- Details grid -->
+  <section id="details" class="section details-grid" aria-label="Details grid">
+    <div id="details-water" class="detail-box" aria-labelledby="details-water-title">
+      <img src="assets/enjan.png" alt="Water calculator deep dive visual" />
+      <h3 id="details-water-title" class="h2" style="font-size: 22px;">Water Calculator — deep dive</h3>
+      <p class="p">
+        Regional datasets + household inputs + behavioral modeling estimate impact. Compare choices to community averages and get practical guidance.
+      </p>
+      <a href="calculator.html" class="detail-link">Open Calculator</a>
+    </div>
+
+    <div id="details-map" class="detail-box" aria-labelledby="details-map-title">
+      <img src="assets/ehn.png" alt="Map detail overlay preview" />
+      <h3 id="details-map-title" class="h2" style="font-size: 22px;">Conservation Map — insights</h3>
+      <p class="p">
+        Interactive layers for restoration projects, water quality zones, and community efforts. Filter by region, type, or impact to see patterns.
+      </p>
+      <a href="map.html" class="detail-link">View Map</a>
+    </div>
+
+    <div id="details-nasa" class="detail-box" aria-labelledby="details-nasa-title">
+      <img src="assets/joe.jpg" alt="NASA weather tools showcase image" />
+      <h3 id="details-nasa-title" class="h2" style="font-size: 22px;">NASA Weather — tools</h3>
+      <p class="p">
+        Satellite‑powered forecasts, drought tracking, and climate overlays. Supports agriculture, emergency planning, and long‑term resilience.
+      </p>
+      <a href="nasa.html" class="detail-link">Explore NASA Tools</a>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section id="capabilities" class="section" aria-labelledby="capabilities-title">
+    <h2 id="capabilities-title" class="h2">How we build</h2>
+    <div class="cards">
+      <article class="card"><div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Accessibility first</strong><p class="p">Screen reader parity, captions, language access, and keyboard controls.</p></div></div></article>
+      <article class="card"><div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Performance hygiene</strong><p class="p">Lazy loading, asset discipline, and clean separation of code and data.</p></div></div></article>
+      <article class="card"><div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Repeatable workflows</strong><p class="p">Version control, documented patterns, and reliable deploys.</p></div></div></article>
+      <article class="card"><div class="item"><div class="icon" aria-hidden="true"></div><div><strong>Community alignment</strong><p class="p">Work that honors local priorities and supports informed decisions.</p></div></div></article>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+<section id="faq" class="section card pad" aria-labelledby="faq-title">
+  <span class="tag"><span class="dot"></span>FAQ • Accessibility • Craft</span>
+  <h2 id="faq-title" class="h2">Questions and answers</h2>
+
+  <div class="inline-controls" role="group" aria-label="FAQ TTS controls">
+    <button class="tts-btn" data-target="faq">🔊 Read this section</button>
+    <button class="pause-btn" data-target="faq">⏸ Pause/Resume</button>
+  </div>
+
+  <div class="accordion" role="list">
+    <div class="item" role="listitem">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="faq-accessibility">What makes these tools accessible?</button>
+      <div class="accordion-content" id="faq-accessibility" role="region" aria-labelledby="faq-title">
+        <p class="p">
+          Accessibility isn’t an afterthought — it’s the foundation. Every tool is built with semantic structure, keyboard parity, screen reader support, captions, transcripts, and bilingual narration. We test on real devices, in real conditions, with real users. Because clarity isn’t optional — it’s justice.
+        </p>
+      </div>
+    </div>
+
+    <div class="item" role="listitem">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="faq-updates">How are updates handled?</button>
+      <div class="accordion-content" id="faq-updates" role="region" aria-labelledby="faq-title">
+        <p class="p">
+          We ship with discipline. Version control is clean. Commits are documented. Deploys are lightweight and reversible. Every update respects the user — no surprises, no regressions, no broken flows. We believe in stability, transparency, and workflows that scale.
+        </p>
+      </div>
+    </div>
+
+    <div class="item" role="listitem">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="faq-bilingual">Do you support bilingual content?</button>
+      <div class="accordion-content" id="faq-bilingual" role="region" aria-labelledby="faq-title">
+        <p class="p">
+          Absolutely. We support bilingual blocks with toggleable narration, localized phrasing, and culturally aware design. English, Spanish, Hindi — and more to come. Because language is access. And access is power.
+        </p>
+      </div>
+    </div>
+
+    <div class="item" role="listitem">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="faq-performance">How do you ensure performance?</button>
+      <div class="accordion-content" id="faq-performance" role="region" aria-labelledby="faq-title">
+        <p class="p">
+          We optimize for reality. Lazy loading, asset discipline, minimal layout thrash, and zero tolerance for jank. Our tools run fast on low-bandwidth, low-spec devices — because performance is equity, and speed is dignity.
+        </p>
+      </div>
+    </div>
+
+    <div class="item" role="listitem">
+      <button class="accordion-toggle" aria-expanded="false" aria-controls="faq-collab">Can I collaborate or contribute?</button>
+      <div class="accordion-content" id="faq-collab" role="region" aria-labelledby="faq-title">
+        <p class="p">
+          Yes. We welcome collaborators, contributors, and co-creators. Whether you’re a mapper, educator, developer, or organizer — there’s room for you. Propose a pilot, share a dataset, or help shape the next module. This isn’t a product. It’s a movement.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Contact -->
+  <section id="contact" class="section" aria-labelledby="contact-title">
+    <span class="tag"><span class="dot"></span>Contact</span>
+    <h2 id="contact-title" class="h2">Let’s collaborate</h2>
+    <article class="card pad">
+      <form id="contactForm" class="list" aria-label="Contact form">
+        <label class="item" for="contactName">
+          <div class="icon" aria-hidden="true"></div>
+          <div>
+            <strong>Your Name</strong>
+            <input id="contactName" name="name" type="text" placeholder="Your name" aria-required="true"
+                   style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
+          </div>
+        </label>
+        <label class="item" for="contactEmail">
+          <div class="icon" aria-hidden="true"></div>
+          <div>
+            <strong>Email</strong>
+            <input id="contactEmail" name="email" type="email" placeholder="you@example.com" aria-required="true"
+                   style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
+          </div>
+        </label>
+        <label class="item" for="contactSubject">
+          <div class="icon" aria-hidden="true"></div>
+          <div>
+            <strong>Subject</strong>
+            <input id="contactSubject" name="subject" type="text" placeholder="Project or collaboration topic" aria-required="true"
+                   style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
+          </div>
+        </label>
+        <label class="item" for="contactMessage">
+          <div class="icon" aria-hidden="true"></div>
+          <div>
+            <strong>Your Message</strong>
+            <textarea id="contactMessage" name="message" rows="4" placeholder="Tell us about your work and how we can help."
+                      style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);"></textarea>
+          </div>
+        </label>
+        <div class="cta-row">
+          <button type="submit" class="btn primary">Send</button>
+          <button type="reset" class="btn">Reset</button>
+        </div>
+        <div id="contactStatus" class="p" aria-live="polite"></div>
+      </form>
+    </article>
+
+    <article class="card pad" aria-label="Collaboration FAQ">
+      <h3 class="h2" style="font-size:22px;">Collaboration FAQ</h3>
+      <div class="list">
+        <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>How do we start?</strong><p class="p">Brief, prototype, iterate, ship — tight cycles that keep quality high.</p></div></div>
+        <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>What’s the workflow?</strong><p class="p">Version control, clear repos, tidy handoffs, and accessible outputs.</p></div></div>
+        <div class="item"><div class="icon" aria-hidden="true"></div><div><strong>What about accessibility?</strong><p class="p">Screen reader support, captions, transcripts, bilingual content, and keyboard controls.</p></div></div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div>© 2025 • Desert Drops — GIS for Good</div>
+    <div><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', e => {
+        const href = anchor.getAttribute('href');
+        if (href && href.length > 1) {
+          const target = document.querySelector(href);
+          if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        }
+      });
+    });
+
+    // Accordion
+    document.querySelectorAll('.accordion-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        content.style.display = expanded ? 'none' : 'block';
+      });
+    });
+
+    // TTS (hero + generic sections)
+    const synth = window.speechSynthesis;
+    let utterance = null;
+    function speak(text) {
+      if (!synth) return;
+      if (synth.speaking) synth.cancel();
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1; utterance.pitch = 1; utterance.lang = 'en-US';
+      synth.speak(utterance);
+    }
+    function pause() { if (synth && synth.speaking) synth.pause(); }
+    function resume() { if (synth && synth.paused) synth.resume(); }
+    function stop() { if (synth && synth.speaking) synth.cancel(); utterance = null; }
+
+    document.getElementById('tts-play-hero')?.addEventListener('click', () => {
+      speak(`Mapping power, elevating voices, and building change. Accessible geospatial tools that turn data into decisions: Water Calculator, Conservation Map, and NASA-powered weather.`);
+    });
+    document.getElementById('tts-pause-hero')?.addEventListener('click', () => { if (synth.paused) resume(); else pause(); });
+    document.getElementById('tts-stop-hero')?.addEventListener('click', stop);
+
+    function ttsTextFor(id) {
+      const el = document.getElementById(id);
+      if (!el) return '';
+      const texts = Array.from(el.querySelectorAll('h2, h3, p, li, strong')).map(x => x.textContent.trim());
+      return texts.join('. ');
+    }
+    document.querySelectorAll('.tts-btn[data-target]').forEach(btn => {
+      btn.addEventListener('click', () => speak(ttsTextFor(btn.getAttribute('data-target'))));
+    });
+    document.querySelectorAll('.pause-btn').forEach(btn => {
+      btn.addEventListener('click', () => { if (synth.paused) resume(); else pause(); });
+    });
+
+    // Contact UX
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('contactStatus');
+    if (form && status) {
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        status.textContent = 'Sending...';
+        setTimeout(() => {
+          status.textContent = 'Thanks! Your message has been received.';
+          form.reset();
+        }, 600);
+      });
+    }
+  </script>
+</body>
+</html>

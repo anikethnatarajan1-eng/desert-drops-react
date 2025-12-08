@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Q&A — Desert Drops Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg: #0b0e12;
+      --card: #12161d;
+      --text: #e9eef8;
+      --muted: #a9b3c7;
+      --accent: #ffffff;
+      --accent-2: #9ef0a7;
+      --shadow: 0 14px 40px rgba(0,0,0,0.45);
+      --radius: 14px;
+      --gap: 18px;
+      --container: min(1100px, 92vw);
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 800px at 10% 0%, #0e141b, var(--bg)),
+        radial-gradient(1000px 600px at 90% 110%, #0e141b, var(--bg));
+      color:var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height:1.6;
+    }
+    a{ color:var(--accent); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    /* Header & nav */
+    header{
+      position: sticky; top:0; z-index:50;
+      backdrop-filter: saturate(120%) blur(8px);
+      background: rgba(18,22,29,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav{ display:flex; justify-content:space-between; align-items:center; width:var(--container); margin:0 auto; padding:14px 0; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:800; }
+    .brand .logo{ width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); }
+    .nav-links{ display:flex; gap:16px; flex-wrap:wrap; }
+    .nav-links a{ padding:8px 12px; border-radius:8px; color:var(--text); }
+    .nav-links a:hover{ background:rgba(255,255,255,0.06); }
+    .nav-links .active{ border:1px solid rgba(255,255,255,0.12); }
+
+    /* Layout */
+    .section{ width:var(--container); margin:28px auto; display:grid; gap:var(--gap); }
+    .card{ background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius); box-shadow:var(--shadow); }
+    .pad{ padding:22px; }
+    .title{ font-size:clamp(26px,5vw,44px); font-weight:800; margin:12px 0 10px; }
+    .h2{ font-size:clamp(22px,4vw,32px); font-weight:800; margin:8px 0 10px; }
+    .p{ color:var(--muted); margin:0 0 12px; }
+
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px; font-size:12px; font-weight:600;
+      color:var(--muted); border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04);
+    }
+    .tag .dot{ width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 2px rgba(255,255,255,0.25); }
+
+    /* Controls */
+    .controls{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .input, .select{
+      padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06); color:#fff; min-width: 220px;
+    }
+    .input::placeholder{ color: rgba(255,255,255,0.55); }
+    .btn{
+      display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px; font-weight:700;
+      border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:var(--text);
+      transition: transform 0.06s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.09); }
+    .btn.primary{ background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#071016; border:none; box-shadow:0 12px 28px rgba(255,255,255,0.35); }
+
+    /* Q&A grid */
+    .qna-grid{ display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .qna-card{
+      position:relative; overflow:hidden; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.08); background:#0f1319;
+    }
+    .qna-card .cover{
+      aspect-ratio: 16/9; background:#10151d; display:flex; align-items:center; justify-content:center;
+      color:#9fb2cc; font-weight:700; letter-spacing:.2px;
+    }
+    .qna-card .pad{ padding:16px; }
+    .qna-card h3{ font-size:18px; font-weight:800; margin:10px 0; }
+    .answer{ color:var(--muted); font-size:14px; }
+
+    /* Accordion interaction */
+    .accordion-toggle{
+      width:100%; text-align:left; padding:12px 14px; border-radius:10px;
+      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#fff; font-weight:700;
+    }
+    .accordion-content{ display:none; margin-top:10px; }
+    .accordion-toggle[aria-expanded="true"] + .accordion-content{ display:block; }
+
+    /* Overlay on hover (tribute aesthetic) */
+    .overlay{
+      position:absolute; inset:0; background:rgba(0,0,0,0.65); color:#fff; display:flex; opacity:0;
+      flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:20px;
+      transition:opacity .25s ease;
+    }
+    .qna-card:hover .overlay{ opacity:1; }
+    .overlay h4{ font-size:18px; font-weight:800; margin-bottom:8px; }
+    .overlay p{ font-size:14px; max-height:120px; overflow-y:auto; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header role="banner" aria-label="Primary navigation">
+    <div class="nav">
+      <div class="brand" aria-label="Site brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="index.html" class="text">Desert Drops</a>
+      </div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="projects.html">Projects</a>
+        <a href="gis.html">GIS for Good</a>
+        <a href="articles.html">Articles</a>
+        <a href="qna.html">Q&A</a>
+        <a href="resource.html">Resources</a>  
+      </nav>
+    </div>
+  </header>
+
+  <!-- Intro -->
+  <section class="section" aria-label="Q&A intro">
+    <article class="card pad">
+      <span class="tag"><span class="dot"></span>Clarity • Access • Community</span>
+      <h1 class="title">Questions and answers</h1>
+      <p class="p">Explore common questions and clear answers about our tools, data, and impact. Search, filter, and listen — built for real users.</p>
+      <div class="controls" role="group" aria-label="Q&A controls">
+        <input id="qna-search" class="input" type="search" placeholder="Search questions…" aria-label="Search Q&A">
+        <select id="qna-filter" class="select" aria-label="Filter by topic">
+          <option value="all">All topics</option>
+          <option value="calculator">Water Calculator</option>
+          <option value="conservation">Conservation Map</option>
+          <option value="weather">NASA Weather</option>
+          <option value="gis">GIS for Good</option>
+          <option value="accessibility">Accessibility</option>
+          <option value="collab">Collaboration</option>
+        </select>
+        <button class="btn primary" id="qna-clear">Clear</button>
+      </div>
+      <div class="controls" aria-label="Q&A TTS">
+        <button class="btn" id="tts-play">🔊 Read this section</button>
+        <button class="btn" id="tts-pause">⏸ Pause/Resume</button>
+        <button class="btn" id="tts-stop">⏹ Stop</button>
+      </div>
+    </article>
+  </section>
+
+  <!-- Q&A Grid -->
+  <section class="section" aria-label="Q&A grid">
+    <div class="qna-grid" id="qna-grid">
+
+      <!-- Card: Calculator -->
+      <article class="qna-card" data-topic="calculator">
+        <div class="cover">Water Calculator</div>
+        <div class="pad">
+          <h3>How does the water calculator work?</h3>
+          <button class="accordion-toggle" aria-expanded="false">Answer</button>
+          <div class="accordion-content">
+            <p class="answer">It estimates weekly usage from showers, laundry, and garden inputs; applies regional flow rates; and shows a breakdown with tips.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card: Conservation -->
+      <article class="qna-card" data-topic="conservation">
+        <div class="cover">Conservation Map</div>
+        <div class="pad">
+          <h3>What is the Conservation Map used for?</h3>
+          <button class="accordion-toggle" aria-expanded="false">Answer</button>
+          <div class="accordion-content">
+            <p class="answer">It highlights restoration projects, water quality zones, and community efforts. Filter by region, type, or impact to connect local actions to global change.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card: Weather -->
+      <article class="qna-card" data-topic="weather">
+        <div class="cover">NASA Weather</div>
+        <div class="pad">
+          <h3>Where does the weather data come from?</h3>
+          <button class="accordion-toggle" aria-expanded="false">Answer</button>
+          <div class="accordion-content">
+            <p class="answer">Satellite feeds and models via NASA and Open‑Meteo. We geocode city names and fetch current conditions — fast, free, and reliable.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card: Accessibility -->
+      <article class="qna-card" data-topic="accessibility">
+        <div class="cover">Accessibility</div>
+        <div class="pad">
+          <h3>What makes these tools accessible?</h3>
+          <button class="accordion-toggle" aria-expanded="false">Answer</button>
+          <div class="accordion-content">
+            <p class="answer">Semantic structure, keyboard parity, captions/transcripts, bilingual content, and device‑level performance tuning.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card: Collaboration -->
+      <article class="qna-card" data-topic="collab">
+        <div class="cover">Collaboration</div>
+        <div class="pad">
+          <h3>Can I suggest a new conservation project?</h3>
+          <button class="accordion-toggle" aria-expanded="false">Answer</button>
+          <div class="accordion-content">
+            <p class="answer">Yes — email <strong>anikethnatarajan1@gmail.com</strong>. Share location, partners, and impact. We’ll review for the map.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Extend with more cards as needed ... -->
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo" class="section card pad" style="display:flex;justify-content:space-between;align-items:center;">
+    <div>© 2025 • Desert Drops Studio — Q&A</div>
+    <div><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Accordion toggle
+    document.querySelectorAll('.accordion-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+      });
+    });
+
+    // Search and filter
+    const search = document.getElementById('qna-search');
+    const filter = document.getElementById('qna-filter');
+    const clear  = document.getElementById('qna-clear');
+    const cards  = Array.from(document.querySelectorAll('.qna-card'));
+
+    function applyFilters(){
+      const q = (search.value || '').toLowerCase();
+      const topic = filter.value;
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        const matchesText = !q || text.includes(q);
+        const matchesTopic = topic === 'all' || card.dataset.topic === topic;
+        card.style.display = (matchesText && matchesTopic) ? '' : 'none';
+      });
+    }
+    search.addEventListener('input', applyFilters);
+    filter.addEventListener('change', applyFilters);
+    clear.addEventListener('click', () => { search.value=''; filter.value='all'; applyFilters(); });
+
+    // TTS controls
+    const synth = window.speechSynthesis;
+    let utterance = null;
+    function speak(text){ if (!synth) return; stop(); utterance = new SpeechSynthesisUtterance(text); utterance.rate=1; utterance.pitch=1; utterance.lang='en-US'; synth.speak(utterance); }
+    function pause(){ if (synth && synth.speaking) synth.pause(); }
+    function resume(){ if (synth && synth.paused) synth.resume(); }
+    function stop(){ if (synth && synth.speaking) synth.cancel(); utterance=null; }
+    document.getElementById('tts-play').addEventListener('click', () => speak('Questions and answers. Explore tools, data, and impact. Search, filter, and listen. Built for real users.'));
+    document.getElementById('tts-pause').addEventListener('click', () => { if (synth.paused) resume(); else pause(); });
+    document.getElementById('tts-stop').addEventListener('click', stop);
+  </script>
+</body>
+</html>

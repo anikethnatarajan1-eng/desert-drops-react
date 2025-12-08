@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Desert Drops — NASA data tools, maps, and climate insight</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="description" content="Accessible, high‑impact NASA data tools: weather, satellite imagery, climate insights, and community mapping."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #071016;
+      --muted: #555f6e;
+      --accent: #071016;
+      --accent-2: #3a86ff;
+      --danger: #ff3b3b;
+      --shadow: 0 14px 40px rgba(0,0,0,0.15);
+    }
+  </style>
+  <link rel="stylesheet" href="style.css"/>
+    <script>
+  document.getElementById('mapBtn').addEventListener('click', function(e) {
+    e.preventDefault(); // stop default jump
+    const mapSection = document.getElementById('map');
+    const yOffset = -100; // adjust this value to scroll a bit further down
+    const y = mapSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  });
+</script>
+
+</head>
+<body>
+  
+
+  <!-- Sticky Nav -->
+<header>
+  <nav class="nav">
+    <div class="nav-brand">
+      <!-- Removed <img> logo -->
+      <div class="brand-logo"></div>
+      <span class="brand-text">Desert Drops</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="contact.html">Contact</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#gisforgood">GIS for Good</a>
+      <a href="index.html#articles">Articles</a>
+      <a href="contact.html">Contact</a>
+      <a href="qna.html" class="active">Q&A</a>
+    </div>
+  </nav>
+</header>
+
+
+  <!-- Hero -->
+<section class="hero-message bubble">
+  <h2>Water Conservation Map</h2>
+  <p>Urban analytics and interactive tools that turn data into community impact.</p>
+  <!-- Scrolls down to the map section -->
+   <a href="#map" class="cta-btn">Explore the Map</a>
+</section>
+
+<!-- Map Video Hero -->
+<section class="section">
+  <div class="container video-hero">
+
+    <!-- Video card -->
+    <div class="video-card">
+      <video class="round" controls poster="assets/map-poster.jpg">
+        <source src="assets/map-demo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="video-overlay"></div>
+      <div class="video-meta">
+        <span class="video-dot"></span>
+        <span>Demo: How to explore the conservation map</span>
+      </div>
+    </div>
+
+    <!-- Text copy -->
+    <div class="hero-copy">
+      <h2>Explore the Conservation Map</h2>
+      <p>
+        This interactive map highlights water conservation efforts across regions. Each marker tells a story —
+        from river restoration to community-led initiatives. Watch the demo to learn how to navigate the map
+        and uncover inspiring projects near you.
+      </p>
+      <p>
+        We’re building this map together. If you know of a project or initiative that should be included,
+        email me your suggestions at <strong>aniketnatarajan1@gmail.com</strong>. Your input helps make the map
+        more powerful and representative of real community impact.
+      </p>
+      <div class="cta-row">
+        <a href="calculator.html" class="cta-btn">Try the Water Calculator</a>
+        <a href="index.html#contact" class="cta-btn secondary">Contact Us</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Global Water Map -->
+<section class="card" id="watermap" data-intro="View global water challenges and solutions.">
+  <h2>Global Water Map</h2>
+  <button class="tts-btn" data-target="watermap">🔊 Read this section</button>
+  <button class="pause-btn" data-target="watermap">⏸ Pause/Resume</button>
+  <div id="mapContainer">
+   <div id="map-section" style="width:100%; max-width:1000px; margin:auto;">
+  <iframe
+    src="https://www.google.com/maps/d/u/1/embed?mid=1e46ocAhVCb1WxL_2UNqyclKxPEcWvIk&ehbc=2E312F&z=2"
+    width="100%"
+    height="600"
+    style="border:0;"
+    allowfullscreen
+    title="Water Conservation Map">
+  </iframe>
+</div>
+  </div>
+  <p class="note">This interactive map shows water scarcity zones, conservation efforts, and community-led solutions around the world.</p>
+</section>

@@ -1,0 +1,277 @@
+// Intro: splash auto-fade and "X" button
+window.addEventListener("load", () => {
+  const splash = document.getElementById("splash");
+  const introPanel = document.getElementById("introPanel");
+  const app = document.getElementById("app");
+  const closeIntro = document.getElementById("closeIntro");
+  const sidebar = document.getElementById("sidebar");
+
+  // When intro closed, hide it and show app + sidebar
+  function revealApp() {
+    introPanel.style.opacity = 0;
+    introPanel.style.transform = "translateY(-8px)";
+    setTimeout(() => {
+      introPanel.classList.add("hidden");
+      app.classList.remove("hidden");
+      if (sidebar) {
+        sidebar.classList.remove("hidden"); // show sidebar
+      }
+      app.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 300);
+  }
+
+  closeIntro.addEventListener("click", revealApp);
+
+  // Auto-reveal after splash fades, if user clicks nothing
+  setTimeout(() => {
+    if (!introPanel.classList.contains("hidden")) {
+      // Keep intro visible until user closes; comment next line to auto-reveal:
+      // revealApp();
+    }
+  }, 2500);
+
+  // Remove splash from DOM after fade
+  setTimeout(() => splash && splash.remove(), 4000);
+});
+
+// Smooth scrolling for sidebar links
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebarLinks = document.querySelectorAll("#sidebar a");
+  sidebarLinks.forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute("href").substring(1);
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+});
+
+// Water calculator
+document.getElementById("calcForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const usagePerPerson = parseFloat(document.getElementById("usagePerPerson").value);
+  const numPeople = parseInt(document.getElementById("numPeople").value, 10);
+  const collectionArea = parseFloat(document.getElementById("collectionArea").value);
+  const rainfall = parseFloat(document.getElementById("rainfall").value);
+  const efficiency = Math.max(0, Math.min(100, parseFloat(document.getElementById("efficiency").value)));
+
+  // Volume collected per month (liters) = rainfall(mm) * area(m^2)
+  const collectedLiters = rainfall * collectionArea;
+  const filteredLiters = collectedLiters * (efficiency / 100);
+
+  // Needs per month (liters) = daily * people * 30
+  const monthlyNeeds = usagePerPerson * numPeople * 30;
+  const surplus = filteredLiters - monthlyNeeds;
+
+  // NEW: storage capacity + daily breakdown + visual status
+const tankCapacity = parseFloat(document.getElementById("tankCapacity").value);
+const overflow = filteredLiters - tankCapacity;
+const tankStatus = overflow > 0
+  ? `Overflow of ${overflow.toFixed(1)} L`
+  : `Unused capacity: ${Math.abs(overflow).toFixed(1)} L`;
+
+const dailySurplus = surplus / 30;
+const statusColor = surplus >= 0 ? "green" : "red";
+const statusLabel = surplus >= 0 ? "Sustainable" : "Unsustainable";
+
+  const results = document.getElementById("calcResults");
+  results.innerHTML = `
+    <div><strong>Collected (raw):</strong> ${collectedLiters.toFixed(1)} L</div>
+    <div><strong>After filtration:</strong> ${filteredLiters.toFixed(1)} L</div>
+    <div><strong>Monthly needs:</strong> ${monthlyNeeds.toFixed(1)} L</div>
+    <div><strong>${surplus >= 0 ? "Surplus" : "Deficit"}:</strong> ${Math.abs(surplus).toFixed(1)} L</div>
+  `;
+});
+
+// Accordion behavior
+document.querySelectorAll(".accordion-toggle").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const content = btn.nextElementSibling;
+    const isOpen = content.classList.contains("open");
+    // Close all others
+    document.querySelectorAll(".accordion-content").forEach((c) => {
+      c.classList.remove("open");
+      c.style.maxHeight = null;
+    });
+    // Toggle current
+    if (!isOpen) {
+      content.classList.add("open");
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+});
+
+// Weather: geocode city -> get weather from Open-Meteo
+const weatherForm = document.getElementById("weatherForm");
+const weatherResult = document.getElementById("weatherResult");
+
+weatherForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const cityName = document.getElementById("cityInput").value.trim();
+  if (!cityName) return;
+
+  weatherResult.textContent = "Loading…";
+
+  try {
+    // Geocode city
+    const g = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1`);
+    const geo = await g.json();
+
+    if (!geo.results || geo.results.length === 0) {
+      // Always give a Weather.com link even if geocoding fails
+      weatherResult.innerHTML = `
+        <div><strong>Location:</strong> ${cityName}</div>
+        <div>No local weather data found.</div>
+        <div style="margin-top:8px;">
+          <a href="https://weather.com/search/enhancedlocalsearch?where=${encodeURIComponent(cityName)}" target="_blank" rel="noopener">
+            View on Weather.com
+          </a>
+        </div>
+      `;
+      return;
+    }
+
+    const { latitude, longitude, name, country } = geo.results[0];
+
+    if (window.map) {
+ window.map = L.map("worldMap").setView([20, 0], 2);
+}
+
+    // Current weather
+    const w = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation&timezone=auto`);
+    const data = await w.json();
+    const cur = data.current;
+
+    weatherResult.innerHTML = `
+      <div><strong>Location:</strong> ${name}, ${country}</div>
+      <div><strong>Temperature:</strong> ${cur.temperature_2m} °C</div>
+      <div><strong>Humidity:</strong> ${cur.relative_humidity_2m} %</div>
+      <div><strong>Wind:</strong> ${cur.wind_speed_10m} m/s</div>
+      <div><strong>Precipitation:</strong> ${cur.precipitation} mm</div>
+      <div style="margin-top:8px;">
+        <a href="https://weather.com/weather/today/l/${latitude},${longitude}" target="_blank" rel="noopener">
+          View full forecast on Weather.com
+        </a>
+      </div>
+    `;
+  } catch (err) {
+    console.error(err);
+    weatherResult.textContent = "Failed to load weather. Try again.";
+  }
+});
+
+// Bulletin board (localStorage per-device)
+const commentForm = document.getElementById("commentForm");
+const commentList = document.getElementById("commentList");
+
+function loadComments() {
+  const items = JSON.parse(localStorage.getItem("watercalc_comments") || "[]");
+  renderComments(items);
+}
+
+function saveComments(items) {
+  localStorage.setItem("watercalc_comments", JSON.stringify(items));
+}
+
+function renderComments(items) {
+  commentList.innerHTML = "";
+  items.forEach((item) => {
+    const li = document.createElement("li");
+    const meta = document.createElement("div");
+    meta.className = "comment-meta";
+    meta.textContent = `${item.author} • ${new Date(item.ts).toLocaleString()}`;
+
+    const text = document.createElement("div");
+    text.textContent = item.text;
+
+    const del = document.createElement("button");
+    del.className = "delete-btn";
+    del.textContent = "Delete";
+    del.addEventListener("click", () => {
+      const next = (JSON.parse(localStorage.getItem("watercalc_comments") || "[]")).filter((x) => x.id !== item.id);
+      saveComments(next);
+      renderComments(next);
+    });
+
+    li.appendChild(text);
+    li.appendChild(del);
+    li.appendChild(meta);
+    commentList.appendChild(li);
+  });
+}
+
+commentForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const author = document.getElementById("commentAuthor").value.trim();
+  const text = document.getElementById("commentText").value.trim();
+  if (!author || !text) return;
+
+  const items = JSON.parse(localStorage.getItem("watercalc_comments") || "[]");
+  const newItem = { id: crypto.randomUUID(), author, text, ts: Date.now() };
+  items.unshift(newItem);
+  saveComments(items);
+  renderComments(items);
+
+  commentForm.reset();
+});
+
+loadComments();
+
+setTimeout(() => {
+  map.invalidateSize();
+}, 400); // after sidebar and app are shown
+
+// Contact form (client-side)
+(() => {
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('contactStatus');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('contactEmail').value.trim();
+    const subject = document.getElementById('contactSubject').value.trim();
+    const message = document.getElementById('contactMessage').value.trim();
+
+    if (!email || !subject || !message) {
+      status.textContent = 'Please fill out all fields.';
+      return;
+    }
+
+    // Demo success — wire to your backend endpoint when ready
+    status.textContent = 'Thanks for submitting!';
+    form.reset();
+  });
+})();
+const form = document.getElementById('contactForm');
+const status = document.getElementById('contactStatus');
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const subject = document.getElementById('contactSubject').value.trim();
+  const message = document.getElementById('contactMessage').value.trim();
+
+  if (!name || !email || !subject || !message) {
+    status.textContent = 'Please fill out all fields.';
+    status.style.color = 'orange';
+    return;
+  }
+
+  // Demo success — replace with backend integration later
+  status.textContent = 'Thanks for reaching out, we’ll get back to you soon!';
+  status.style.color = 'green';
+  form.reset();
+});
+// End of contact form code
+
+// Initialize map
+window.map = L.map("worldMap").setView([20, 0], 2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(window.map);

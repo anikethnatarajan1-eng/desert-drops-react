@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Water Calculator — Desert Drops</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Tribute aesthetic -->
+  <style>
+    :root {
+      --bg: #0b0e12;
+      --card: #12161d;
+      --text: #e9eef8;
+      --muted: #a9b3c7;
+      --accent: #ffffff;
+      --accent-2: #9ef0a7;
+      --brand-1: #ffe085; /* icon gradient */
+      --brand-2: #ffad7a;
+      --shadow: 0 14px 40px rgba(0,0,0,0.45);
+      --radius: 14px;
+      --gap: 18px;
+      --container: min(1100px, 92vw);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% 0%, #0e141b, var(--bg)),
+        radial-gradient(1000px 600px at 90% 110%, #0e141b, var(--bg));
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header & Nav */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(120%) blur(8px);
+      background: rgba(18,22,29,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      width: var(--container); margin: 0 auto; padding: 14px 0;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; letter-spacing: 0.2px;
+    }
+    .brand .logo {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.35);
+    }
+    .brand .text { color: var(--text); font-weight: 800; }
+    .nav-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .nav-links a {
+      padding: 8px 12px; border-radius: 8px; transition: background 0.2s ease; color: var(--text);
+    }
+    .nav-links a:hover { background: rgba(255,255,255,0.06); }
+    .nav-links .active { border: 1px solid rgba(255,255,255,0.12); }
+
+    /* Layout */
+    .section { width: var(--container); margin: 28px auto; display: grid; gap: var(--gap); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); align-items: center; }
+    .grid-auto { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+    /* Cards, text, tags */
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .pad { padding: 22px; }
+    .title { font-size: clamp(26px, 5vw, 44px); font-weight: 800; margin: 12px 0 10px; }
+    .h2 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; margin: 8px 0 10px; }
+    .p { color: var(--muted); margin: 0 0 12px; }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+      color: var(--muted); border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+    }
+    .tag .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.25);
+    }
+
+    /* Buttons */
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 12px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: var(--text);
+      transition: transform 0.06s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.09); }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #071016; border: none;
+      box-shadow: 0 12px 28px rgba(255,255,255,0.35);
+    }
+    .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.14); }
+
+    /* Icons list */
+    .list { display: grid; gap: 10px; }
+    .item {
+      display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start;
+      padding: 12px; border-radius: 12px; background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .item .icon {
+      width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+      box-shadow: 0 8px 20px rgba(255,173,122,0.25);
+    }
+
+    /* Media with overlay */
+    .project-thumb {
+      position: relative; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08); background: #0f1319;
+    }
+    .project-thumb img, .project-thumb video {
+      width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;
+    }
+    .project-thumb:hover img { transform: scale(1.05); }
+    .project-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.70); color: #fff;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      opacity: 0; transition: opacity 0.3s ease; padding: 20px; text-align: center;
+    }
+    .project-thumb:hover .project-overlay { opacity: 1; }
+    .project-overlay h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+    .project-overlay p { font-size: 14px; max-height: 140px; overflow-y: auto; margin-top: 10px; padding-right: 6px; }
+
+    /* Calculator form */
+    form.calculator { display: grid; gap: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 18px; border-radius: var(--radius); }
+    .field { display: grid; gap: 8px; }
+    .label { font-weight: 700; color: #fff; }
+    .input, .select { width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: #fff; border-radius: 10px; }
+    .input::placeholder { color: rgba(255,255,255,0.55); }
+    .input:focus, .select:focus { outline: none; border-color: rgba(158,240,167,0.55); background: rgba(255,255,255,0.08); }
+
+    /* Results */
+    .result {
+      background: linear-gradient(180deg, rgba(14,165,233,0.18), rgba(14,165,233,0.08));
+      border: 1px solid rgba(14,165,233,0.26);
+      color: #e6f7ff; border-radius: var(--radius); padding: 16px; font-weight: 700; text-align: center;
+    }
+    .result small { display: block; color: #bfe9ff; margin-top: 6px; font-weight: 600; }
+
+    /* Divider */
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); border: none; margin: 10px 0 16px; }
+
+    /* Footer */
+    footer {
+      width: var(--container); margin: 40px auto 80px; color: var(--muted);
+      display: flex; justify-content: space-between; align-items: center; gap: 20px;
+      border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 18px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header role="banner" aria-label="Primary navigation">
+    <div class="nav">
+      <div class="brand" aria-label="Site brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="index.html" class="text">Desert Drops</a>
+      </div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="projects.html">Projects</a>
+        <a href="gis.html">GIS for Good</a>
+        <a href="articles.html">Articles</a>
+        <a href="qna.html">Q&A</a>
+        <a href="resource.html">Resources</a>  
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="section" aria-label="Water Calculator hero">
+    <div class="grid-2" style="align-items:center;">
+      <article class="card pad" aria-labelledby="hero-title">
+        <span class="tag"><span class="dot"></span>Water • Conservation • Impact</span>
+        <h1 id="hero-title" class="title">Water Calculator</h1>
+        <p class="p">Discover your water footprint and turn everyday habits into measurable impact.</p>
+        <div class="cta-row" role="group" aria-label="Primary actions">
+          <a class="btn primary" href="#run-calculator">Try the calculator</a>
+          <a class="btn ghost" href="services.html">Back to services</a>
+        </div>
+      </article>
+      <aside class="card pad" aria-labelledby="hero-media-title">
+        <h2 id="hero-media-title" class="h2">Preview</h2>
+        <div class="project-thumb" aria-label="Calculator demo video">
+          <video autoplay loop muted playsinline poster="assets/calculator-preview.png">
+            <source src="assets/calculator-demo.mp4" type="video/mp4">
+          </video>
+          <div class="project-overlay">
+            <h3>Watch the walkthrough</h3>
+            <p>Step-by-step demo: input showers, laundry, and garden; select region; visualize weekly footprint and tips.</p>
+            <button class="btn primary" onclick="document.getElementById('run-calculator').scrollIntoView({behavior:'smooth'})">Try it now</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Calculator -->
+  <section id="run-calculator" class="section" aria-labelledby="calc-title">
+    <h2 id="calc-title" class="h2">Calculate your usage</h2>
+    <article class="card pad">
+      <div class="grid-2">
+        <div>
+          <p class="p">Enter quick details — get an instant estimate and practical tips that actually fit your life.</p>
+          <form class="calculator" id="calc-form" aria-describedby="result">
+            <div class="field">
+              <label class="label" for="showers">Average shower length (minutes)</label>
+              <input class="input" id="showers" type="number" min="0" step="1" placeholder="e.g., 8">
+            </div>
+            <div class="field">
+              <label class="label" for="laundry">Laundry loads per week</label>
+              <input class="input" id="laundry" type="number" min="0" step="1" placeholder="e.g., 3">
+            </div>
+            <div class="field">
+              <label class="label" for="garden">Minutes watering garden per week</label>
+              <input class="input" id="garden" type="number" min="0" step="1" placeholder="e.g., 30">
+            </div>
+            <div class="field">
+              <label class="label" for="region">Region (for typical flow rates)</label>
+              <select class="select" id="region">
+                <option value="default">Select your region</option>
+                <option value="us-west">US West (low-flow common)</option>
+                <option value="us-east">US East (mixed flow)</option>
+                <option value="global">Global average</option>
+              </select>
+            </div>
+            <div class="cta-row">
+              <button type="button" class="btn primary" id="calculate">Calculate</button>
+              <button type="button" class="btn" id="reset">Reset</button>
+            </div>
+            <div class="result" id="result" aria-live="polite">
+              Your estimated weekly water footprint will appear here.
+              <small>Includes showers, laundry, and garden watering.</small>
+            </div>
+          </form>
+        </div>
+        <div>
+          <ul class="list" aria-label="Design pillars">
+            <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>Accessibility first</strong><p class="p">Semantic labels, keyboard parity, clear language, and real-device testing.</p></div></li>
+            <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>Performance hygiene</strong><p class="p">Lean assets, minimal layout thrash, and predictable UX.</p></div></li>
+            <li class="item"><div class="icon" aria-hidden="true"></div><div><strong>Transparent modeling</strong><p class="p">Assumptions documented, illustrative numbers, and guidance over dogma.</p></div></li>
+          </ul>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Case Studies -->
+  <section id="case-studies" class="section" aria-labelledby="case-studies-title">
+    <h2 id="case-studies-title" class="h2">Case studies — in action</h2>
+    <div class="grid-auto">
+      <article class="card pad"><strong>Phoenix households</strong><p class="p">Tracked usage and cut consumption by 18% in one summer.</p></article>
+      <article class="card pad"><strong>Community workshops</strong><p class="p">Residents learned to measure and share conservation tips.</p></article>
+      <article class="card pad"><strong>Schools</strong><p class="p">Students used the calculator to design water‑saving projects.</p></article>
+    </div>
+  </section>
+
+  <!-- Extended FAQ -->
+  <section id="faq" class="section card pad" aria-labelledby="faq-title">
+    <h2 id="faq-title" class="h2">Extended FAQ</h2>
+    <div class="accordion" role="list">
+      <div class="item" role="listitem">
+        <button class="accordion-toggle" aria-expanded="false">How accurate is the calculator?</button>
+        <div class="accordion-content" style="display:none;">
+          <p class="p">It uses regional averages and typical flow rates to give an illustrative weekly estimate.</p>
+        </div>
+      </div>
+      <div class="item" role="listitem">
+        <button class="accordion-toggle" aria-expanded="false">Can I customize inputs?</button>
+        <div class="accordion-content" style="display:none;">
+          <p class="p">Yes — adjust shower length, laundry loads, and garden watering to reflect your habits.</p>
+        </div>
+      </div>
+      <div class="item" role="listitem">
+        <button class="accordion-toggle" aria-expanded="false">Does it support bilingual output?</button>
+        <div class="accordion-content" style="display:none;">
+          <p class="p">We can add bilingual blocks with narration and translations for broader access.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bilingual blocks -->
+  <section id="bilingual" class="section" aria-labelledby="bilingual-title">
+    <h2 id="bilingual-title" class="h2">Bilingual support — English & Spanish</h2>
+    <div class="grid-auto">
+      <article class="card pad"><p class="p"><strong>English:</strong> “Every drop counts. Conservation is community.”</p><p class="p"><strong>Spanish:</strong> “Cada gota cuenta. La conservación es comunidad.”</p></article>
+      <article class="card pad"><p class="p"><strong>English:</strong> “Measure, share, and save.”</p><p class="p"><strong>Spanish:</strong> “Mide, comparte y ahorra.”</p></article>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="section" aria-labelledby="testimonials-title">
+    <h2 id="testimonials-title" class="h2">Testimonials</h2>
+    <div class="grid-auto">
+      <article class="card pad"><p class="p">“The calculator made our water use visible and actionable.” — Community member</p></article>
+      <article class="card pad"><p class="p">“We used it in class to design conservation projects.” — Teacher</p></article>
+      <article class="card pad"><p class="p">“It helped us plan irrigation more efficiently.” — Farmer</p></article>
+    </div>
+  </section>
+
+  <!-- Sustainability Narratives -->
+  <section id="sustainability" class="section" aria-labelledby="sustainability-title">
+    <h2 id="sustainability-title" class="h2">Sustainability narratives</h2>
+    <div class="grid-auto">
+      <article class="card pad"><strong>Rain gardens</strong><p class="p">Reduced flooding and improved local biodiversity.</p></article>
+      <article class="card pad"><strong>Permeable pavements</strong><p class="p">Cooled neighborhoods and reduced runoff.</p></article>
+      <article class="card pad"><strong>Solar pumps</strong><p class="p">Clean water access with lower emissions.</p></article>
+    </div>
+  </section>
+
+  <!-- Mapping for Good -->
+  <section id="mapping" class="section" aria-labelledby="mapping-title">
+    <h2 id="mapping-title" class="h2">Mapping for Good</h2>
+    <div class="grid-auto">
+      <article class="card pad"><strong>Food deserts</strong><p class="p">Maps revealed gaps in access to fresh food.</p></article>
+      <article class="card pad"><strong>Housing displacement</strong><p class="p">Visualized patterns helped push for equitable policies.</p></article>
+      <article class="card pad"><strong>Air quality</strong><p class="p">Community sensors mapped pollution hotspots.</p></article>
+    </div>
+  </section>
+
+  <!-- Closing -->
+  <section id="closing" class="section card pad" aria-labelledby="closing-title">
+    <h2 id="closing-title" class="h2">Closing notes</h2>
+    <p class="p">This Water Calculator page is more than a tool — it’s a showcase of conservation, equity, and community impact. Expanded modules align it with the GIS tribute aesthetic.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div>© 2025 • Desert Drops — Water Calculator</div>
+    <div><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Calculator logic
+    (function(){
+      const $ = sel => document.querySelector(sel);
+      const showers = $('#showers');
+      const laundry = $('#laundry');
+      const garden  = $('#garden');
+      const region  = $('#region');
+      const result  = $('#result');
+      const calcBtn = $('#calculate');
+      const resetBtn= $('#reset');
+
+      const flowRates = { 'us-west': 1.8, 'us-east': 2.1, 'global': 2.0, 'default': 2.0 }; // gallons/min
+      const laundryUsage = 30;   // gallons per load (HE avg)
+      const gardenPerMin = 2.5;  // gallons per minute (illustrative)
+
+      function fmt(n){ return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(n); }
+
+      function calculate(){
+        const s = parseFloat(showers.value || 0);
+        const l = parseFloat(laundry.value || 0);
+        const g = parseFloat(garden.value || 0);
+        const r = region.value in flowRates ? region.value : 'default';
+        const rate = flowRates[r];
+
+        const showersPerWeek = 7;
+        const showerGallons = s * rate * showersPerWeek;
+        const laundryGallons = l * laundryUsage;
+        const gardenGallons  = g * gardenPerMin;
+        const total = showerGallons + laundryGallons + gardenGallons;
+
+        result.innerHTML = `
+          <div style="font-size:1.2rem;">
+            Estimated weekly water footprint: <strong>${fmt(total)}</strong> gallons
+          </div>
+          <small>
+            Showers: ${fmt(showerGallons)} • Laundry: ${fmt(laundryGallons)} • Garden: ${fmt(gardenGallons)}
+          </small>
+        `;
+      }
+
+      function reset(){
+        [showers, laundry, garden].forEach(i => i.value = '');
+        region.value = 'default';
+        result.innerHTML = 'Your estimated weekly water footprint will appear here.<small>Includes showers, laundry, and garden watering.</small>';
+      }
+
+      calcBtn.addEventListener('click', calculate);
+      resetBtn.addEventListener('click', reset);
+    })();
+
+    // Accordion behavior
+    document.querySelectorAll('.accordion-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        content.style.display = expanded ? 'none' : 'block';
+      });
+    });
+  </script>
+</body>
+</html>
+
+<!-- Weather -->
+<section id="weather" class="section" aria-labelledby="weather-title">
+  <span class="tag"><span class="dot"></span>Live weather</span>
+  <h2 id="weather-title" class="h2">Live weather by city</h2>
+  <article class="card pad">
+    <form id="weatherForm" aria-describedby="weatherResult" class="list" style="margin-top:10px;">
+      <label class="item" for="cityInput">
+        <div class="icon" aria-hidden="true"></div>
+        <div>
+          <strong>City name</strong>
+          <input type="text" id="cityInput" placeholder="Los Angeles, CA" required
+                 style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
+        </div>
+      </label>
+      <div class="cta-row">
+        <button type="submit" class="btn primary">Get weather</button>
+      </div>
+    </form>
+    <div id="weatherResult" class="p" aria-live="polite" style="margin-top:8px;"></div>
+    <p class="p">Powered by Open‑Meteo. Forecast link opens Weather.com for your city.</p>
+  </article>
+</section>
+
+<script>
+  const form = document.getElementById('weatherForm');
+  const result = document.getElementById('weatherResult');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const city = document.getElementById('cityInput').value.trim();
+    if (!city) return;
+
+    result.textContent = 'Loading…';
+
+    try {
+      // First geocode the city to lat/lon using Open-Meteo’s geocoding API
+      const geoResp = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`);
+      const geoData = await geoResp.json();
+      if (!geoData.results || !geoData.results.length) {
+        result.textContent = 'City not found.';
+        return;
+      }
+      const { latitude, longitude, name, country } = geoData.results[0];
+
+      // Then fetch current weather
+      const weatherResp = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+      const weatherData = await weatherResp.json();
+      const w = weatherData.current_weather;
+
+      result.innerHTML = `
+        <strong>${name}, ${country}</strong><br>
+        Temperature: ${w.temperature} °C<br>
+        Windspeed: ${w.windspeed} km/h<br>
+        Condition code: ${w.weathercode}
+      `;
+    } catch (err) {
+      console.error(err);
+      result.textContent = 'Error fetching weather.';
+    }
+  });
+</script>

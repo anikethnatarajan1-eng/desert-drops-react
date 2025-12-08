@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Desert Drops — Resources, tools, and learning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="description" content="Curated resources for water sustainability, geospatial practice, and accessible, community-focused tools."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <style>
+    :root {
+      --bg: #0b0e12;
+      --card: #12161d;
+      --text: #e9eef8;
+      --muted: #a9b3c7;
+      --accent: #4dd6ff;
+      --accent-2: #9ef0a7;
+      --brand-1: #ffb86b;
+      --brand-2: #ff6bd6;
+      --shadow: 0 14px 40px rgba(0,0,0,0.45);
+      --radius: 14px;
+      --container: min(1100px, 92vw);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% 0%, #0e141b, var(--bg)),
+        radial-gradient(1000px 600px at 90% 110%, #0e141b, var(--bg));
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: saturate(120%) blur(8px);
+      background: rgba(18,22,29,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      width: var(--container); margin: 0 auto; padding: 14px 0;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; letter-spacing: 0.2px;
+    }
+    .brand-logo {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+      box-shadow: 0 6px 18px rgba(255, 107, 214, 0.35);
+    }
+    .brand-text { color: var(--text); font-weight: 800; }
+    .nav-links {
+      display: flex; gap: 16px; flex-wrap: wrap;
+    }
+    .nav-links a {
+      padding: 8px 12px; border-radius: 8px;
+      transition: background 0.2s ease;
+      color: var(--text);
+    }
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* Hero */
+    .hero-section { position: relative; width: 100%; height: 48vh; overflow: hidden; }
+    .hero-video {
+      position: absolute; top: 0; left: 0; width: 100vw; height: 100%;
+      object-fit: cover; z-index: 0; opacity: 0.4;
+    }
+    .hero-message {
+      position: relative; z-index: 1;
+      width: var(--container); margin: 0 auto; padding: 60px 20px;
+    }
+    .bubble {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+    .badge {
+      display: inline-flex; gap: 6px; align-items: center;
+      padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--text);
+    }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-radius: 12px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      transition: transform 0.06s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.09); }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #071016; border: none;
+      box-shadow: 0 12px 28px rgba(77,214,255,0.35);
+    }
+    .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.14); }
+
+    /* Sections */
+    .section { width: var(--container); margin: 28px auto; display: grid; gap: 18px; }
+    .section-alt {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .kicker { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .h2 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; margin: 8px 0 6px; }
+    .p { color: var(--muted); margin: 0 0 12px; }
+
+    .cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 16px;
+    }
+    .item { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+    .item .icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: linear-gradient(135deg, #ffe085, #ffad7a);
+      box-shadow: 0 8px 20px rgba(255,173,122,0.25);
+    }
+
+    .resource-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+    .resource-list li {
+      display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 12px;
+    }
+    .resource-name { font-weight: 700; }
+    .resource-desc { color: var(--muted); }
+    .resource-actions { display: inline-flex; gap: 8px; }
+    .tag { display: inline-flex; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--text); }
+
+    .accordion .item { border-bottom: 1px dashed rgba(255,255,255,0.12); }
+    .accordion-toggle {
+      width: 100%; text-align: left; color: var(--text);
+      background: transparent; border: none; padding: 10px 0; font-weight: 700;
+    }
+    .accordion-content { display: none; padding: 8px 0 12px; color: var(--muted); }
+
+    .tts-controls, .inline-controls {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 8px;
+    }
+    .tts-btn, .pause-btn {
+      padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06); color: var(--text); font-weight: 600;
+    }
+
+    footer {
+      width: var(--container); margin: 40px auto 80px;
+      color: var(--muted);
+      display: flex; justify-content: space-between; align-items: center; gap: 20px;
+      border-top: 1px dashed rgba(255,255,255,0.12); padding-top: 18px;
+    }
+
+    @media (max-width: 600px) {
+      .hero-section { height: 42vh; }
+      .hero-message { padding: 40px 16px; }
+      .resource-list li { grid-template-columns: 1fr; }
+      .resource-actions { justify-content: start; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header role="banner" aria-label="Primary navigation">
+    <div class="nav">
+      <div class="brand" aria-label="Site brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="index.html" class="text">Desert Drops</a>
+      </div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="projects.html">Projects</a>
+        <a href="gis.html">GIS for Good</a>
+        <a href="articles.html">Articles</a>
+        <a href="qna.html">Q&A</a>
+        <a href="resource.html">Resources</a>  
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-section" aria-label="Hero video and message">
+    <video autoplay loop muted playsinline class="hero-video" aria-label="Ambient background video">
+      <source src="assets/lorax.mp4" type="video/mp4">
+    </video>
+    <div class="hero-message bubble" aria-labelledby="hero-title">
+      <span class="badge">Guides • Research • Community</span>
+      <h1 id="hero-title" class="h2" style="font-size: clamp(28px, 5vw, 44px);">Resources for water, maps, and community impact</h1>
+      <p class="p">
+        Curated links and learning to build better: sustainability, geospatial practice, and accessible tools that respect real users.
+      </p>
+      <div class="cta-row" role="group" aria-label="Hero actions">
+        <a class="btn primary" href="#resources">Explore resources</a>
+        <a class="btn ghost" href="#guides">Guides</a>
+        <a class="btn" href="#faq">FAQ</a>
+      </div>
+      <div class="tts-controls" aria-label="Text to speech controls">
+        <button class="tts-btn" id="tts-play" aria-label="Play narration">Play narration</button>
+        <button class="tts-btn" id="tts-pause" aria-label="Pause narration">Pause</button>
+        <button class="tts-btn" id="tts-stop" aria-label="Stop narration">Stop</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section id="resources" class="section" aria-labelledby="resources-title" data-intro="Explore more about water sustainability and geospatial innovation.">
+    <h2 id="resources-title" class="h2">Resource Links</h2>
+    <div role="group" aria-label="Resources TTS controls" class="inline-controls">
+      <button class="tts-btn" data-target="resources">🔊 Read this section</button>
+      <button class="pause-btn" data-target="resources">⏸ Pause/Resume</button>
+    </div>
+
+    <ul class="resource-list">
+      <li>
+        <span class="resource-name"><a href="https://wrrc.arizona.edu/" target="_blank" rel="noopener">University of Arizona Research</a></span>
+        <span class="resource-desc">Water resources research, regional insights, and practical conservation approaches.</span>
+        <span class="resource-actions">
+          <span class="tag">Water</span>
+          <a class="btn" href="https://wrrc.arizona.edu/" target="_blank" rel="noopener">Open</a>
+        </span>
+      </li>
+      <li>
+        <span class="resource-name"><a href="https://www.epa.gov/watersense" target="_blank" rel="noopener">EPA WaterSense Program</a></span>
+        <span class="resource-desc">Efficiency standards and practical guides to reduce water use at home and in communities.</span>
+        <span class="resource-actions">
+          <span class="tag">Policy</span>
+          <a class="btn" href="https://www.epa.gov/watersense" target="_blank" rel="noopener">Open</a>
+        </span>
+      </li>
+      <li>
+        <span class="resource-name"><a href="https://www.unwater.org/water-facts" target="_blank" rel="noopener">UN Water Facts</a></span>
+        <span class="resource-desc">Global context: access, scarcity, and progress toward sustainable development goals.</span>
+        <span class="resource-actions">
+          <span class="tag">Global</span>
+          <a class="btn" href="https://www.unwater.org/water-facts" target="_blank" rel="noopener">Open</a>
+        </span>
+      </li>
+      <li>
+        <span class="resource-name"><a href="https://www.weather.com" target="_blank" rel="noopener">Weather.com</a></span>
+        <span class="resource-desc">City‑level weather and forecasts to plan daily choices and community events.</span>
+        <span class="resource-actions">
+          <span class="tag">Weather</span>
+          <a class="btn" href="https://www.weather.com" target="_blank" rel="noopener">Open</a>
+        </span>
+      </li>
+      <li>
+        <span class="resource-name"><a href="https://romogis.com" target="_blank" rel="noopener">Frank Romo – RomoGIS Enterprises</a></span>
+        <span class="resource-desc">Geospatial storytelling and community‑first mapping practice.</span>
+        <span class="resource-actions">
+          <span class="tag">GIS</span>
+          <a class="btn" href="https://romogis.com" target="_blank" rel="noopener">Open</a>
+        </span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Guides -->
+  <section id="guides" class="section section-alt" aria-labelledby="guides-title">
+    <h2 id="guides-title" class="h2">Quick guides</h2>
+    <article class="card">
+      <div class="item">
+        <div class="icon" aria-hidden="true"></div>
+        <div>
+          <strong>Start a conservation plan</strong>
+          <p class="p">Track water use, set goals, and align with EPA WaterSense guidance.</p>
+        </div>
+      </div>
+    </article>
+    <article class="card">
+      <div class="item">
+        <div class="icon" aria-hidden="true"></div>
+        <div>
+          <strong>Read a map like a pro</strong>
+          <p class="p">Color, contrast, layers, and annotation for inclusive geospatial stories.</p>
+        </div>
+      </div>
+    </article>
+    <article class="card">
+      <div class="item">
+        <div class="icon" aria-hidden="true"></div>
+        <div>
+          <strong>Use weather for planning</strong>
+          <p class="p">Forecasts and conditions to plan community events and outreach.</p>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="section card" aria-labelledby="faq-title">
+    <h2 id="faq-title" class="h2">Questions and answers</h2>
+    <div class="inline-controls" role="group" aria-label="FAQ TTS controls">
+      <button class="tts-btn" data-target="faq">🔊 Read this section</button>
+      <button class="pause-btn" data-target="faq">⏸ Pause/Resume</button>
+    </div>
+    <div class="accordion" role="list">
+      <div class="item" role="listitem">
+        <button class="accordion-toggle" aria-expanded="false">Can I suggest new resources?</button>
+        <div class="accordion-content" role="region" aria-label="Suggest resources">
+          <p>Yes—send links and a brief note via the contact form. Preference for accessible, evidence‑based, community‑aligned work.</p>
+        </div>
+      </div>
+      <div class="item" role="listitem">
+        <button class="accordion-toggle" aria-expanded="false">How are links curated?</button>
+        <div class="accordion-content" role="region" aria-label="Curation">
+          <p>Priority on practical guidance, clear storytelling, and transparent data methods. Updated as projects evolve.</p>
+        </div>
+      </div>
+      <div class="item" role="listitem">
+        <button class="accordion-toggle" aria-expanded="false">Do you provide bilingual support?</button>
+        <div class="accordion-content" role="region" aria-label="Bilingual support">
+          <p>Yes—bilingual text blocks and captions can be added. TTS supports multiple languages where available.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section section-alt" aria-labelledby="contact-title">
+    <h2 id="contact-title" class="h2">Share a resource or get in touch</h2>
+    <article class="card pad">
+      <p class="p">
+        Have a link to add or want to collaborate? Send a note with your goals and timeline. Delivery is clean, documented, and audience‑ready.
+      </p>
+      <form id="contactForm" class="contact-form" aria-describedby="contactStatus">
+        <label>
+          <span>Your Name</span>
+          <input type="text" id="contactName" name="name" required aria-required="true"/>
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" id="contactEmail" name="email" required aria-required="true"/>
+        </label>
+        <label>
+          <span>Subject</span>
+          <input type="text" id="contactSubject" name="subject" required aria-required="true"/>
+        </label>
+        <label>
+          <span>Your Message</span>
+          <textarea id="contactMessage" name="message" rows="4" required aria-required="true"></textarea>
+        </label>
+        <button type="submit" class="btn primary">Send</button>
+        <div id="contactStatus" class="status" aria-live="polite"></div>
+      </form>
+    </article>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div>© 2025 • Desert Drops — Resources for water, maps, and community impact.</div>
+    <div><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
+  </footer>
+
+  <script>
+    // Smooth scroll for internal anchors
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', e => {
+        const href = anchor.getAttribute('href');
+        if (href && href.length > 1) {
+          const target = document.querySelector(href);
+          if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        }
+      });
+    });
+
+    // Accordion behavior
+    document.querySelectorAll('.accordion-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        content.style.display = expanded ? 'none' : 'block';
+      });
+    });
+
+    // Basic TTS for hero
+    const synth = window.speechSynthesis;
+    let utterance = null;
+    function ttsSpeak(text) {
+      if (!synth) return;
+      if (synth.speaking) synth.cancel();
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1; utterance.pitch = 1; utterance.lang = 'en-US';
+      synth.speak(utterance);
+    }
+    function ttsPause() { if (synth && synth.speaking) synth.pause(); }
+    function ttsResume() { if (synth && synth.paused) synth.resume(); }
+    function ttsStop() { if (synth && synth.speaking) synth.cancel(); utterance = null; }
+
+    document.getElementById('tts-play').addEventListener('click', () => {
+      const text = `Resources for water, maps, and community impact. Curated links and learning to build better: sustainability, geospatial practice, and accessible tools that respect real users.`;
+      ttsSpeak(text);
+    });
+    document.getElementById('tts-pause').addEventListener('click', ttsPause);
+    document.getElementById('tts-stop').addEventListener('click', ttsStop);
+
+    // Section TTS generic
+    function ttsTextFor(id) {
+      const el = document.getElementById(id);
+      if (!el) return '';
+      const texts = Array.from(el.querySelectorAll('h2, h3, p, li, strong')).map(x => x.textContent.trim());
+      return texts.join('. ');
+    }
+    document.querySelectorAll('.tts-btn').forEach(btn => {
+      const target = btn.getAttribute('data-target');
+      if (!target) return;
+      btn.addEventListener('click', () => ttsSpeak(ttsTextFor(target)));
+    });
+    document.querySelectorAll('.pause-btn').forEach(btn => {
+      btn.addEventListener('click', () => { if (synth.paused) ttsResume(); else ttsPause(); });
+    });
+
+    // Contact form basic UX
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('contactStatus');
+    if (form && status) {
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        status.textContent = 'Sending...';
+        setTimeout(() => {
+          status.textContent = 'Thanks! Your message has been received.';
+          form.reset();
+        }, 600);
+      });
+    }
+  </script>
+</body>
+</html>

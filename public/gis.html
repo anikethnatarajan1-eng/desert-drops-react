@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Frank Romo & RomoGIS — Community Mapping, Equity, and Collaboration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A heartfelt, practical tribute to Frank Romo and RomoGIS: mission, impact, inspiration, and a proposal to collaborate for community power." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0e12;
+      --card: #12161d;
+      --text: #e9eef8;
+      --muted: #a9b3c7;
+      --accent: #ffffff;
+      --accent-2: #9ef0a7;
+      --danger: #ff6b6b;
+      --shadow: 0 14px 40px rgba(0,0,0,0.45);
+      --radius: 14px;
+      --gap: 18px;
+      --container: min(1100px, 92vw);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 800px at 10% 0%, #0e141b, var(--bg)),
+                  radial-gradient(1000px 600px at 90% 110%, #0e141b, var(--bg));
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      line-height: 1.5;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    header {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: saturate(120%) blur(8px);
+      background: rgba(18,22,29,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      width: var(--container); margin: 0 auto; padding: 14px 0;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; letter-spacing: 0.2px;
+    }
+    .brand .logo {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 6px 18px rgba(77,214,255,0.35);
+    }
+    .nav-links {
+      display: flex; gap: 16px;
+    }
+    .nav-links a {
+      padding: 8px 12px; border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .hero {
+      width: var(--container); margin: 40px auto 24px;
+      display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 26px;
+      align-items: center;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .card.pad { padding: 22px; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 10px; border-radius: 999px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+    }
+    .tag .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 2px rgba(77,214,255,0.25);
+    }
+
+    .title {
+      font-size: clamp(26px, 5vw, 44px);
+      font-weight: 800;
+      margin: 12px 0 10px;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: clamp(14px, 1.6vw, 18px);
+      margin-bottom: 16px;
+    }
+    .cta-row {
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-radius: 12px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      transition: transform 0.06s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.09); }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #071016; border: none;
+      box-shadow: 0 12px 28px rgba(255, 255, 255, 0.35);
+    }
+    .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.14); }
+
+    .section {
+      width: var(--container); margin: 28px auto;
+      display: grid; gap: 18px;
+    }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-auto { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .kicker { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .h2 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; margin: 8px 0 10px; }
+    .p { color: var(--muted); margin: 0 0 12px; }
+
+    .list {
+      display: grid; gap: 10px;
+    }
+    .item {
+      display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start;
+      padding: 12px; border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .item .icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: linear-gradient(135deg, #ffe085, #ffad7a);
+      box-shadow: 0 8px 20px rgba(255,173,122,0.25);
+    }
+
+    .media-grid {
+      display: grid; gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .media {
+      aspect-ratio: 16/9;
+      background: #0f1319;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .media iframe, .media video, .media img {
+      width: 100%; height: 100%; display: block; object-fit: cover;
+    }
+
+    footer {
+      width: var(--container); margin: 40px auto 80px;
+      color: var(--muted);
+      display: flex; justify-content: space-between; align-items: center; gap: 20px;
+      border-top: 1px dashed rgba(255,255,255,0.12);
+      padding-top: 18px;
+    }
+
+    /* Accessibility helpers */
+    .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+    .tts-controls {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 8px;
+    }
+    .tts-btn {
+      padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06); color: var(--text); font-weight: 600;
+    }
+
+    /* Subtle animated divider */
+    .divider {
+      height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      border: none; margin: 10px 0 16px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header role="banner" aria-label="Primary navigation">
+    <div class="nav">
+      <div class="brand" aria-label="Site brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="index.html" class="text">Desert Drops</a>
+      </div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="services.html">Services</a>
+        <a href="contact.html">Contact</a>
+        <a href="projects.html">Projects</a>
+        <a href="gis.html">GIS for Good</a>
+        <a href="articles.html">Articles</a>
+        <a href="qna.html">Q&A</a>
+        <a href="resource.html">Resources</a>  
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero">
+      <article class="card pad" aria-labelledby="hero-title">
+        <span class="tag"><span class="dot"></span>Community Mapping • Equity • Data Storytelling</span>
+        <h1 id="hero-title" class="title">Frank Romo and RomoGIS: mapping power, elevating voices, and building change</h1>
+        <p class="lead">
+          This page is a sincere appreciation of Frank Romo and RomoGIS—their mission to democratize geospatial insight, empower neighborhoods, and translate data into action.
+          I’ve been directly inspired by their initiative and want to work shoulder‑to‑shoulder to amplify it: blending careful analysis with human stories, local knowledge, and accessible tools.
+        </p>
+        <div class="cta-row" role="group" aria-label="Primary actions">
+          <a class="btn primary" href="#proposal">Collaboration proposal</a>
+          <a class="btn ghost" href="#media">Watch the media</a>
+          <a class="btn" href="#community">Community shout‑outs</a>
+        </div>
+        <div class="tts-controls" aria-label="Text to speech controls">
+          <button class="tts-btn" id="tts-play" aria-label="Play narration">Play narration</button>
+          <button class="tts-btn" id="tts-pause" aria-label="Pause narration">Pause</button>
+          <button class="tts-btn" id="tts-stop" aria-label="Stop narration">Stop</button>
+        </div>
+      </article>
+
+      <aside class="card pad" aria-labelledby="hero-aside-title">
+        <h2 id="hero-aside-title" class="h2">Why this matters</h2>
+        <p class="p">
+          Maps shape narratives. Narratives shape policy. Policy shapes lives.
+          RomoGIS builds maps that listen—to residents, histories, and futures—and turns them into practical pathways for equity.
+          Their approach aligns with everything I care about: accessibility, accountability, and collaboration with communities that deserve more than abstract charts.
+        </p>
+        <hr class="divider" />
+        <div class="list" aria-label="Core pillars">
+          <div class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Community‑first design</strong>
+              <p class="p">Center lived experience and local expertise. Let residents define success, then measure toward it.</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Transparent data storytelling</strong>
+              <p class="p">Illuminate inequities without sensationalizing—and highlight solutions with humility and rigor.</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Impact over optics</strong>
+              <p class="p">Focus on outcomes that shift conditions on the ground, not vanity metrics or performative dashboards.</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="mission" class="section">
+      <span class="kicker">Mission</span>
+      <h2 class="h2">RomoGIS’s mission: democratize GIS for real communities</h2>
+      <article class="card pad">
+        <p class="p">
+          RomoGIS is committed to making GIS understandable, actionable, and inclusive. They translate complex spatial patterns into practical choices—funding priorities, zoning conversations, transit equity, housing justice, environmental health, and more.
+          It’s not “tech for tech’s sake.” It’s a practice of listening, learning, and building tools that work for the public good.
+        </p>
+        <p class="p">
+          What I admire most is the union of art and analysis: maps that tell stories, stories that invite neighbors in, and neighbors whose participation improves the data itself.
+          That reciprocity is rare, and it’s the gold standard for civic technology.
+        </p>
+      </article>
+    </section>
+
+    <section id="impact" class="section grid-auto">
+      <div class="card pad">
+        <span class="kicker">Impact</span>
+        <h2 class="h2">Where RomoGIS makes a difference</h2>
+        <ul class="list" aria-label="Impact areas">
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Housing and displacement</strong>
+              <p class="p">Identify pressure points and co‑design interventions that protect residents.</p>
+            </div>
+          </li>
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Mobility and access</strong>
+              <p class="p">Show how transit and walkability shape opportunity—and advocate for equitable investments.</p>
+            </div>
+          </li>
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Environmental justice</strong>
+              <p class="p">Visualize air, heat, and flood risks—and help communities secure resources to adapt.</p>
+            </div>
+          </li>
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Education and youth</strong>
+              <p class="p">Use maps to spark curiosity, teach data literacy, and support youth‑led storytelling.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card pad">
+        <span class="kicker">Values</span>
+        <h2 class="h2">How they work</h2>
+        <p class="p">
+          RomoGIS pairs disciplined methods with humility and care. They co‑create with partners, credit community labor, and make the craft visible—so others can learn and build too.
+        </p>
+        <ul class="list" aria-label="Practice values">
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Open collaboration</strong>
+              <p class="p">Share code, methods, and lessons—so good work scales and travels.</p>
+            </div>
+          </li>
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Ethical data</strong>
+              <p class="p">Be precise about uncertainty and risk. Protect privacy. Respect consent.</p>
+            </div>
+          </li>
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Accessibility</strong>
+              <p class="p">Design for real users: screen readers, captions, language access, and clear, jargon‑free storytelling.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="proposal" class="section">
+      <span class="kicker">Collaboration</span>
+      <h2 class="h2">A practical proposal to work together</h2>
+      <article class="card pad">
+        <p class="p">
+          I want to contribute to RomoGIS as an ally and builder: develop accessible web maps, produce community‑ready content, and help scale workshops and toolkits.
+          I’ll align with your standards and handle the plumbing—file hygiene, version control, accessibility, and production hardening—so the focus stays on impact.
+        </p>
+        <hr class="divider" />
+        <div class="grid-2">
+          <div>
+            <h3 class="h2" style="font-size: 22px;">What I’ll deliver</h3>
+            <ul class="list">
+              <li class="item">
+                <div class="icon" aria-hidden="true"></div>
+                <div>
+                  <strong>Accessible map microsites</strong>
+                  <p class="p">Fast, inclusive, bilingual pages for projects—complete with captions, transcripts, and TTS.</p>
+                </div>
+              </li>
+              <li class="item">
+                <div class="icon" aria-hidden="true"></div>
+                <div>
+                  <strong>Community media kits</strong>
+                  <p class="p">Short films, photo essays, and social assets that honor local narratives and invite participation.</p>
+                </div>
+              </li>
+              <li class="item">
+                <div class="icon" aria-hidden="true"></div>
+                <div>
+                  <strong>Workshop tooling</strong>
+                  <p class="p">Facilitation slides, prompts, and templates tailored to your pedagogy and partners.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="h2" style="font-size: 22px;">How this helps RomoGIS</h3>
+            <ul class="list">
+              <li class="item">
+                <div class="icon" aria-hidden="true"></div>
+                <div>
+                  <strong>Capacity and consistency</strong>
+                  <p class="p">Take on production load with clean workflows and repeatable patterns that reflect your brand.</p>
+                </div>
+              </li>
+              <li class="item">
+                <div class="icon" aria-hidden="true"></div>
+                <div>
+                  <strong>Reach and resonance</strong>
+                  <p class="p">Package your work so partners, funders, and residents can engage quickly and deeply.</p>
+                </div>
+              </li>
+              <li class="item">
+                <div class="icon" aria-hidden="true"></div>
+                <div>
+                  <strong>Documentation</strong>
+                  <p class="p">Transparent, shared notes that make onboarding and handoff painless.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section id="media" class="section">
+      <span class="kicker">Media</span>
+      <h2 class="h2">Videos and photos: stories behind the data</h2>
+      <article class="card pad">
+        <p class="p">
+          Here’s where we highlight the human side: short films, workshop clips, and photo essays that show communities leading and learning.
+          Add your links below; captions and transcripts are supported.
+        </p>
+        <div class="media-grid" role="list">
+          <figure class="media" role="listitem" aria-label="Feature video">
+            <!-- Replace with your video -->
+            <iframe title="Feature: RomoGIS community mapping" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+          </figure>
+          <figure class="media" role="listitem" aria-label="Workshop clip">
+            <video controls aria-label="Workshop clip with captions">
+              <source src="videos/workshop.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </figure>
+          <figure class="media" role="listitem" aria-label="Photo essay">
+            <img src="images/community.jpg" alt="Residents reviewing a neighborhood map together" />
+          </figure>
+        </div>
+      </article>
+    </section>
+
+    <section id="community" class="section">
+      <span class="kicker">Community</span>
+      <h2 class="h2">Shout‑outs, gratitude, and partners</h2>
+      <article class="card pad">
+        <p class="p">
+          Deep appreciation to the organizers, educators, and residents who make this work real.
+          Add shout‑outs here—names, collectives, and local leaders—and link to their projects or galleries.
+        </p>
+        <ul class="list" aria-label="Shout-outs">
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Neighborhood coalitions</strong>
+              <p class="p">For anchoring priorities and building trust across differences.</p>
+            </div>
+          </li>
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Youth mappers</strong>
+              <p class="p">For curiosity, courage, and a future that belongs to them.</p>
+            </div>
+          </li>
+          <li class="item">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Civic partners</strong>
+              <p class="p">For opening doors to resources, accountability, and sustained support.</p>
+            </div>
+          </li>
+        </ul>
+      </article>
+    </section>
+
+    <section id="contact" class="section">
+      <span class="kicker">Contact</span>
+      <h2 class="h2">Let’s talk</h2>
+      <article class="card pad">
+        <p class="p">
+          I’d love to discuss a collaboration—from content builds to workshop tooling and map microsites. I’ll match your standards, protect community dignity, and keep delivery fast and clean.
+        </p>
+        <form class="list" aria-label="Contact form">
+          <label class="item" for="name">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Your name</strong>
+              <input id="name" name="name" type="text" placeholder="Your name" aria-required="true" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
+            </div>
+          </label>
+
+          <label class="item" for="email">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Email</strong>
+              <input id="email" name="email" type="email" placeholder="you@example.com" aria-required="true" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);" />
+            </div>
+          </label>
+
+          <label class="item" for="message">
+            <div class="icon" aria-hidden="true"></div>
+            <div>
+              <strong>Message</strong>
+              <textarea id="message" name="message" rows="5" placeholder="Tell me about your work and how I can help." style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:var(--text);"></textarea>
+            </div>
+          </label>
+
+          <div class="cta-row">
+            <button type="submit" class="btn primary">Send</button>
+            <button type="reset" class="btn">Reset</button>
+          </div>
+        </form>
+      </article>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div>© 2025 — Tribute built with care. Non‑commercial; intended to celebrate and collaborate.</div>
+    <div><a href="#content">Back to top</a></div>
+  </footer>
+
+  <script>
+    // Basic TTS for accessibility
+    const ttsText = `Frank Romo and RomoGIS: mapping power, elevating voices, and building change.
+    This is a sincere appreciation and a proposal to collaborate—combining accessible mapping,
+    community media, and careful storytelling to advance equity.`;
+
+    const synth = window.speechSynthesis;
+    let utterance = null;
+
+    function speak(text) {
+      if (!synth) return;
+      stop();
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.lang = 'en-US';
+      synth.speak(utterance);
+    }
+    function pause() { if (synth && synth.speaking) synth.pause(); }
+    function resume() { if (synth && synth.paused) synth.resume(); }
+    function stop() { if (synth && synth.speaking) synth.cancel(); utterance = null; }
+
+    document.getElementById('tts-play').addEventListener('click', () => speak(ttsText));
+    document.getElementById('tts-pause').addEventListener('click', pause);
+    document.getElementById('tts-stop').addEventListener('click', stop);
+  </script>
+</body>
+</html>
