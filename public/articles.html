@@ -152,7 +152,6 @@
   <section class="section" aria-label="Articles grid">
     <div class="grid" id="grid"></div>
     <div class="controls" style="justify-content:center;">
-      <button class="btn" id="loadMore">Load more</button>
     </div>
   </section>
 
@@ -341,9 +340,6 @@
 
     // Initial render
     renderBatch();
-
-    // Load more
-    document.getElementById('loadMore').addEventListener('click', renderBatch);
 
     // Card read buttons (event delegation)
     grid.addEventListener('click', (e) => {
