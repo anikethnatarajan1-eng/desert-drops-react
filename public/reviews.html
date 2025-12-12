@@ -7,116 +7,20 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
 
-  // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAHpyl_HoRacIL-vOjnAGLInNt8wCtoTXE",
-  authDomain: "desert-drops.firebaseapp.com",
-  databaseURL: "https://desert-drops-default-rtdb.firebaseio.com",
-  projectId: "desert-drops",
-  storageBucket: "desert-drops.firebasestorage.app",
-  messagingSenderId: "439274765946",
-  appId: "1:439274765946:web:e65c65740bc35f4507c5c3",
-  measurementId: "G-N08F58H4LM"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
   <style>
-    :root{
-      --bg: #0b0e12;
-      --card: #12161d;
-      --text: #e9eef8;
-      --muted: #a9b3c7;
-      --accent: #ffffff;
-      --accent-2: #9ef0a7;
-      --shadow: 0 14px 40px rgba(0,0,0,0.45);
-      --radius: 14px;
-      --gap: 18px;
-      --container: min(1100px, 92vw);
-    }
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      background:
-        radial-gradient(1200px 800px at 10% 0%, #0e141b, var(--bg)),
-        radial-gradient(1000px 600px at 90% 110%, #0e141b, var(--bg));
-      color:var(--text);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      line-height:1.6;
-    }
-    a{ color:var(--accent); text-decoration:none; }
-    a:hover{ text-decoration:underline; }
-
-    header{
-      position: sticky; top:0; z-index:50;
-      backdrop-filter: saturate(120%) blur(8px);
-      background: rgba(18,22,29,0.7);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .nav{ display:flex; justify-content:space-between; align-items:center; width:var(--container); margin:0 auto; padding:14px 0; }
-    .brand{ display:flex; align-items:center; gap:10px; font-weight:800; }
-    .brand .logo{ width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); }
-    .nav-links{ display:flex; gap:16px; flex-wrap:wrap; }
-    .nav-links a{ padding:8px 12px; border-radius:8px; color:var(--text); }
-    .nav-links a:hover{ background:rgba(255,255,255,0.06); }
-    .nav-links .active{ border:1px solid rgba(255,255,255,0.12); }
-
-    .section{ width:var(--container); margin:28px auto; display:grid; gap:var(--gap); }
-    .card{ background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius); box-shadow:var(--shadow); }
-    .pad{ padding:22px; }
-    .title{ font-size:clamp(28px,5vw,44px); font-weight:800; margin:12px 0 10px; }
-    .h2{ font-size:clamp(22px,4vw,32px); font-weight:800; margin:8px 0 10px; }
-    .p{ color:var(--muted); margin:0 0 12px; }
-
-    .grid{ display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .review-card{
-      position:relative; overflow:hidden; border-radius:12px;
-      border:1px solid rgba(255,255,255,0.08); background:#0f1319;
-      display:flex; flex-direction:column;
-    }
-    .review-card .pad{ padding:16px; }
-    .name{ font-weight:800; }
-    .meta{ display:flex; gap:8px; flex-wrap:wrap; color:var(--muted); font-size:12px; }
-    .stars{ color:#ffe085; font-weight:800; letter-spacing:1px; }
-    .quote{ color:var(--muted); font-size:14px; margin-top:10px; }
-    .delete-btn{ margin-top:10px; font-size:12px; background:rgba(255,255,255,0.08); border:none; border-radius:8px; padding:6px 10px; color:var(--muted); cursor:pointer; }
-    .delete-btn:hover{ background:rgba(255,255,255,0.15); color:#fff; }
-
-    .footer{ width:var(--container); margin:40px auto 80px; color:var(--muted); display:flex; justify-content:space-between; align-items:center; gap:20px; border-top:1px dashed rgba(255,255,255,0.12); padding-top:18px; }
+    /* … your CSS from before … */
+    .controls{ display:grid; grid-template-columns:1fr 150px 1fr auto; gap:12px; }
+    .input, .select{ padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.10); background:#0f1319; color:var(--text); }
+    .btn.primary{ padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#000; font-weight:800; cursor:pointer; }
+    .btn.primary:hover{ filter:brightness(1.05); }
   </style>
+
+  <!-- Firebase compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
 <body>
-  <header role="banner" aria-label="Primary navigation">
-    <div class="nav">
-      <div class="brand" aria-label="Site brand"><div class="logo" aria-hidden="true"></div><a href="index.html" class="text">Desert Drops</a></div>
-      <nav class="nav-links" aria-label="Main navigation">
-        <a href="services.html">Services</a>
-        <a href="projects.html">Projects</a>
-        <a href="gis.html">GIS for Good</a>
-        <a href="articles.html">Articles</a>
-        <a href="qna.html">Q&A</a>
-        <a href="resource.html">Resources</a>
-        <a href="contact.html">Contact</a>
-        <a href="reviews.html" class="active">Reviews</a>
-      </nav>
-    </div>
-  </header>
-
-  <section class="section" aria-label="Reviews intro">
-    <article class="card pad">
-      <h1 class="title">Reviews that fuel the movement</h1>
-      <p class="p">Real voices, big energy. A finite grid of praise — and space for yours to join in.</p>
-    </article>
-  </section>
+  <!-- … your header/nav … -->
 
   <section class="section" aria-label="Reviews grid">
     <div class="grid" id="grid"></div>
@@ -141,93 +45,69 @@ const analytics = getAnalytics(app);
     </article>
   </section>
 
-  <footer class="footer" role="contentinfo">
-    <div>© 2025 • Desert Drops Studio — Reviews</div>
-    <div><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
-  </footer>
+  <footer class="footer">© 2025 • Desert Drops Studio — Reviews</footer>
 
   <script>
-  const grid = document.getElementById('grid');
-  const form = document.getElementById('reviewForm');
-  const nameInput = document.getElementById('name');
-  const ratingInput = document.getElementById('rating');
-  const quoteInput = document.getElementById('quote');
-
-  function stars(n){
-    return '★★★★★'.slice(0,n) + '☆☆☆☆☆'.slice(0,5-n);
-  }
-
-  function cardHTML(r){
-    return `
-      <article class="review-card" id="${r.id}">
-        <div class="pad">
-          <div class="meta"><span class="name">${r.name}</span> • <span>${r.date}</span></div>
-          <div class="stars" aria-label="${r.rating} out of 5 stars">${stars(r.rating)}</div>
-          <p class="quote">“${r.quote}”</p>
-          <button class="delete-btn" aria-label="Delete review" data-id="${r.id}">Delete</button>
-        </div>
-      </article>
-    `;
-  }
-
-  function render(list){
-    grid.innerHTML = list
-      .sort((a, b) => b.date.localeCompare(a.date))
-      .map(cardHTML)
-      .join('');
-  }
-
-  // Live listener (reads and updates UI for everyone)
-  reviewsRef.on('value', (snap) => {
-    const data = snap.val() || {};
-    render(Object.values(data));
-  });
-
-  // Add (writes to DB so everyone sees it)
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = nameInput.value.trim();
-    const rating = parseInt(ratingInput.value, 10);
-    const quote = quoteInput.value.trim();
-    if (!name || !quote || !(rating >= 1 && rating <= 5)) return;
-
-    const id = 'r' + Date.now();
-    const date = new Date().toISOString().slice(0,10);
-    const review = { id, name, rating, date, quote };
-
-    reviewsRef.child(id).set(review).then(() => {
-      form.reset();
-      nameInput.focus();
-    });
-  });
-
-  // Delete (removes from DB for everyone)
-  grid.addEventListener('click', (e) => {
-    const btn = e.target.closest('.delete-btn');
-    if (!btn) return;
-    const id = btn.getAttribute('data-id');
-    reviewsRef.child(id).remove();
-  });
-</script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-  <script>
-    // Your web app's Firebase configuration
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyAHpyl_HoRacIL-vOjnAGLInNt8wCtoTXE",
       authDomain: "desert-drops.firebaseapp.com",
       databaseURL: "https://desert-drops-default-rtdb.firebaseio.com",
       projectId: "desert-drops",
-      storageBucket: "desert-drops.firebasestorage.app",
+      storageBucket: "desert-drops.appspot.com",
       messagingSenderId: "439274765946",
       appId: "1:439274765946:web:e65c65740bc35f4507c5c3",
       measurementId: "G-N08F58H4LM"
     };
-
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const reviewsRef = database.ref('reviews');
+    const db = firebase.database();
+    const reviewsRef = db.ref('reviews');
+
+    const grid = document.getElementById('grid');
+    const form = document.getElementById('reviewForm');
+    const nameInput = document.getElementById('name');
+    const ratingInput = document.getElementById('rating');
+    const quoteInput = document.getElementById('quote');
+
+    function stars(n){ return '★★★★★'.slice(0,n) + '☆☆☆☆☆'.slice(0,5-n); }
+    function cardHTML(r){
+      return `<article class="review-card" id="${r.id}">
+        <div class="pad">
+          <div class="meta"><span class="name">${r.name}</span> • <span>${r.date}</span></div>
+          <div class="stars">${stars(r.rating)}</div>
+          <p class="quote">“${r.quote}”</p>
+          <button class="delete-btn" data-id="${r.id}">Delete</button>
+        </div>
+      </article>`;
+    }
+    function render(list){ grid.innerHTML = list.map(cardHTML).join(''); }
+
+    // Listen
+    reviewsRef.on('value', snap => {
+      const data = snap.val() || {};
+      render(Object.values(data));
+    });
+
+    // Add
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const rating = parseInt(ratingInput.value, 10);
+      const quote = quoteInput.value.trim();
+      if (!name || !quote || !(rating>=1 && rating<=5)) return;
+      const id = 'r'+Date.now();
+      const date = new Date().toISOString().slice(0,10);
+      reviewsRef.child(id).set({id,name,rating,date,quote});
+      form.reset();
+    });
+
+    // Delete
+    grid.addEventListener('click', e => {
+      const btn = e.target.closest('.delete-btn');
+      if (!btn) return;
+      const id = btn.getAttribute('data-id');
+      reviewsRef.child(id).remove();
+    });
   </script>
 </body>
 </html>
