@@ -1,37 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!--
+    Desert Drops — Reviews (Realtime, Global, Deletable)
+    - Static HTML + Firebase Realtime Database (compat SDKs)
+    - Works on GitHub Pages or Firebase Hosting
+    - Everyone sees the same reviews instantly; deletes remove for all
+    - Clean UI, accessible controls, light validation
+    - Author-only delete is possible with Firebase Auth (optional)
+  -->
+
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Desert Drops — Reviews</title>
 
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
 
+  <!-- Base styles -->
   <style>
-    /* … your CSS from before … */
+    :root{
+      --bg: #0b0e12;
+      --bg-2: #0e141b;
+      --card: #12161d;
+      --text: #e9eef8;
+      --muted: #a9b3c7;
+      --accent: #ffffff;
+      --accent-2: #9ef0a7;
+      --danger: #ff6b6b;
+      --success: #9ef0a7;
+      --shadow: 0 14px 40px rgba(0,0,0,0.45);
+      --radius: 14px;
+      --gap: 18px;
+      --container: min(1100px, 92vw);
+    }
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 800px at 10% 0%, var(--bg-2), var(--bg)),
+        radial-gradient(1000px 600px at 90% 110%, var(--bg-2), var(--bg));
+      color:var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height:1.6;
+    }
+    a{ color:var(--accent); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    /* Header / nav */
+    header{
+      position: sticky; top:0; z-index:50;
+      backdrop-filter: saturate(120%) blur(8px);
+      background: rgba(18,22,29,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav{ display:flex; justify-content:space-between; align-items:center; width:var(--container); margin:0 auto; padding:14px 0; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:800; }
+    .brand .logo{ width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); }
+    .nav-links{ display:flex; gap:16px; flex-wrap:wrap; }
+    .nav-links a{ padding:8px 12px; border-radius:8px; color:var(--text); }
+    .nav-links a:hover{ background:rgba(255,255,255,0.06); }
+    .nav-links .active{ border:1px solid rgba(255,255,255,0.12); }
+
+    /* Sections / cards */
+    .section{ width:var(--container); margin:28px auto; display:grid; gap:var(--gap); }
+    .card{ background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius); box-shadow:var(--shadow); }
+    .pad{ padding:22px; }
+    .title{ font-size:clamp(28px,5vw,44px); font-weight:800; margin:12px 0 10px; }
+    .h2{ font-size:clamp(22px,4vw,32px); font-weight:800; margin:8px 0 10px; }
+    .p{ color:var(--muted); margin:0 0 12px; }
+
+    /* Grid / review cards */
+    .grid{ display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .review-card{
+      position:relative; overflow:hidden; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.08); background:#0f1319;
+      display:flex; flex-direction:column;
+    }
+    .review-card .pad{ padding:16px; }
+    .meta{ display:flex; gap:8px; flex-wrap:wrap; color:var(--muted); font-size:12px; }
+    .stars{ color:#ffe085; font-weight:800; letter-spacing:1px; }
+    .quote{ color:var(--muted); font-size:14px; margin-top:10px; }
+    .delete-btn{ margin-top:10px; font-size:12px; background:rgba(255,255,255,0.08); border:none; border-radius:8px; padding:6px 10px; color:var(--muted); cursor:pointer; }
+    .delete-btn:hover{ background:rgba(255,255,255,0.15); color:#fff; }
+
+    /* Form controls */
     .controls{ display:grid; grid-template-columns:1fr 150px 1fr auto; gap:12px; }
-    .input, .select{ padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.10); background:#0f1319; color:var(--text); }
-    .btn.primary{ padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#000; font-weight:800; cursor:pointer; }
+    .input, .select{
+      padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.10);
+      background:#0f1319; color:var(--text);
+    }
+    .btn.primary{
+      padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.12);
+      background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#000; font-weight:800; cursor:pointer;
+    }
     .btn.primary:hover{ filter:brightness(1.05); }
+
+    /* Footer */
+    .footer{ width:var(--container); margin:40px auto 80px; color:var(--muted); display:flex; justify-content:space-between; align-items:center; gap:20px; border-top:1px dashed rgba(255,255,255,0.12); padding-top:18px; }
+
+    /* Status bar / toasts */
+    .statusbar{
+      position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+      display:flex; gap:10px; align-items:center;
+      background:rgba(18,22,29,0.85); border:1px solid rgba(255,255,255,0.08);
+      color:var(--muted); border-radius:12px; padding:8px 12px; box-shadow:var(--shadow);
+      z-index:50;
+    }
+    .badge{ padding:4px 8px; border-radius:8px; font-size:12px; font-weight:800; }
+    .badge.ok{ background:rgba(158,240,167,0.12); color:var(--success); border:1px solid rgba(158,240,167,0.35); }
+    .badge.fail{ background:rgba(255,107,107,0.12); color:var(--danger); border:1px solid rgba(255,107,107,0.35); }
+    .toast{
+      position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+      background:#141923; border:1px solid rgba(255,255,255,0.10); color:var(--text);
+      padding:10px 14px; border-radius:10px; box-shadow:var(--shadow);
+      opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+      z-index:50;
+    }
+    .toast.show{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(-6px); }
+    .toast.success{ border-color: rgba(158,240,167,0.35); }
+    .toast.error{ border-color: rgba(255,107,107,0.35); }
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
   </style>
 
-  <!-- Firebase compat SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <!-- Firebase compat SDKs (no bundler needed) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
-  <!-- … your header/nav … -->
+  <!-- Header -->
+  <header role="banner" aria-label="Primary navigation">
+    <div class="nav">
+      <div class="brand" aria-label="Site brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="index.html" class="text">Desert Drops</a>
+      </div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="services.html">Services</a>
+        <a href="projects.html">Projects</a>
+        <a href="gis.html">GIS for Good</a>
+        <a href="articles.html">Articles</a>
+        <a href="qna.html">Q&A</a>
+        <a href="resource.html">Resources</a>
+        <a href="contact.html">Contact</a>
+        <a href="reviews.html" class="active">Reviews</a>
+      </nav>
+    </div>
+  </header>
 
-  <section class="section" aria-label="Reviews grid">
-    <div class="grid" id="grid"></div>
+  <!-- Intro -->
+  <section class="section" aria-label="Reviews intro">
+    <article class="card pad">
+      <h1 class="title">Reviews that fuel the movement</h1>
+      <p class="p">Real voices, big energy. A shared grid of praise — yours included — synced in real time.</p>
+      <p class="p">When someone posts or deletes a review, it updates for everyone. Simple, transparent, and community‑driven.</p>
+    </article>
   </section>
 
+  <!-- Reviews grid -->
+  <section class="section" aria-label="Reviews grid">
+    <article class="card pad" aria-live="polite">
+      <div id="grid" class="grid" role="list"></div>
+      <div id="empty" class="p" style="display:none;">No reviews yet. Be the first to add yours below.</div>
+    </article>
+  </section>
+
+  <!-- Leave a review -->
   <section class="section" aria-label="Leave a review">
     <article class="card pad">
       <h2 class="h2">Leave your own review</h2>
-      <form id="reviewForm" class="controls">
-        <input class="input" type="text" id="name" placeholder="Your name" required>
-        <select class="select" id="rating" required>
+      <form id="reviewForm" class="controls" autocomplete="off" aria-describedby="helper">
+        <span id="helper" class="sr-only">All fields required. Rating from one to five stars.</span>
+        <input class="input" type="text" id="name" name="name" placeholder="Your name" maxlength="60" required aria-label="Your name">
+        <select class="select" id="rating" name="rating" required aria-label="Rating">
           <option value="">Rating</option>
           <option value="5">★★★★★</option>
           <option value="4">★★★★☆</option>
@@ -39,16 +181,30 @@
           <option value="2">★★☆☆☆</option>
           <option value="1">★☆☆☆☆</option>
         </select>
-        <input class="input" type="text" id="quote" placeholder="Your thoughts…" required>
-        <button class="btn primary" type="submit">Submit</button>
+        <input class="input" type="text" id="quote" name="quote" placeholder="Your thoughts…" maxlength="280" required aria-label="Your review text">
+        <button class="btn primary" type="submit" aria-label="Submit review">Submit</button>
       </form>
+      <p class="p" style="margin-top:10px;">Max length: 60 characters for name, 280 for review. No HTML or scripts.</p>
     </article>
   </section>
 
-  <footer class="footer">© 2025 • Desert Drops Studio — Reviews</footer>
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div>© 2025 • Desert Drops Studio — Reviews</div>
+    <div><a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a></div>
+  </footer>
 
+  <!-- Status bar + toast -->
+  <div class="statusbar" aria-live="polite">
+    <span id="conn" class="badge fail">Offline</span>
+    <span id="save" class="badge" style="display:none;"></span>
+    <span id="count" class="badge">0 reviews</span>
+  </div>
+  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+  <!-- App logic -->
   <script>
-    // Firebase config
+    // Firebase config (from your Firebase console → Project settings → Web app)
     const firebaseConfig = {
       apiKey: "AIzaSyAHpyl_HoRacIL-vOjnAGLInNt8wCtoTXE",
       authDomain: "desert-drops.firebaseapp.com",
@@ -59,55 +215,209 @@
       appId: "1:439274765946:web:e65c65740bc35f4507c5c3",
       measurementId: "G-N08F58H4LM"
     };
+
+    // Initialize Firebase (compat)
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const reviewsRef = db.ref('reviews');
 
+    // DOM refs
     const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
     const form = document.getElementById('reviewForm');
     const nameInput = document.getElementById('name');
     const ratingInput = document.getElementById('rating');
     const quoteInput = document.getElementById('quote');
+    const connBadge = document.getElementById('conn');
+    const saveBadge = document.getElementById('save');
+    const countBadge = document.getElementById('count');
+    const toastEl = document.getElementById('toast');
 
-    function stars(n){ return '★★★★★'.slice(0,n) + '☆☆☆☆☆'.slice(0,5-n); }
-    function cardHTML(r){
-      return `<article class="review-card" id="${r.id}">
-        <div class="pad">
-          <div class="meta"><span class="name">${r.name}</span> • <span>${r.date}</span></div>
-          <div class="stars">${stars(r.rating)}</div>
-          <p class="quote">“${r.quote}”</p>
-          <button class="delete-btn" data-id="${r.id}">Delete</button>
-        </div>
-      </article>`;
+    // Helpers
+    function stars(n){
+      return '★★★★★'.slice(0,n) + '☆☆☆☆☆'.slice(0,5-n);
     }
-    function render(list){ grid.innerHTML = list.map(cardHTML).join(''); }
+    function sanitize(text){
+      // Remove angle brackets and trim to avoid HTML injection
+      return String(text).replace(/[<>]/g, '').trim();
+    }
+    function showToast(msg, type='success'){
+      toastEl.className = 'toast show ' + (type === 'error' ? 'error' : 'success');
+      toastEl.textContent = msg;
+      setTimeout(() => { toastEl.classList.remove('show'); }, 2000);
+    }
+    function setConnStatus(ok){
+      connBadge.textContent = ok ? 'Online' : 'Offline';
+      connBadge.className = 'badge ' + (ok ? 'ok' : 'fail');
+    }
+    function setSaveStatus(text, ok=true){
+      saveBadge.style.display = 'inline-block';
+      saveBadge.textContent = text;
+      saveBadge.className = 'badge ' + (ok ? 'ok' : 'fail');
+      setTimeout(() => { saveBadge.style.display = 'none'; }, 1500);
+    }
+    function updateCount(n){
+      countBadge.textContent = n + (n === 1 ? ' review' : ' reviews');
+    }
 
-    // Listen
-    reviewsRef.on('value', snap => {
+    function cardHTML(r){
+      const starText = `${r.rating} out of 5 stars`;
+      return `
+        <article class="review-card" id="${r.id}" role="listitem" aria-label="Review by ${r.name}">
+          <div class="pad">
+            <div class="meta"><span class="name" aria-label="Reviewer name">${r.name}</span> • <span aria-label="Date">${r.date}</span></div>
+            <div class="stars" aria-label="${starText}">${stars(r.rating)}</div>
+            <p class="quote">“${r.quote}”</p>
+            <button class="delete-btn" aria-label="Delete review by ${r.name}" data-id="${r.id}">Delete</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function render(list){
+      const sorted = list.slice().sort((a, b) => {
+        // Sort newest to oldest by date (YYYY-MM-DD), then by id time if equal
+        if (a.date !== b.date) return b.date.localeCompare(a.date);
+        return b.id.localeCompare(a.id);
+      });
+      grid.innerHTML = sorted.map(cardHTML).join('');
+      const has = sorted.length > 0;
+      empty.style.display = has ? 'none' : 'block';
+      updateCount(sorted.length);
+    }
+
+    // Online/offline indicator
+    function checkConnection(){
+      // Ping by reading once; update status based on success/fail
+      reviewsRef.once('value')
+        .then(() => setConnStatus(true))
+        .catch(() => setConnStatus(false));
+    }
+    checkConnection();
+    setInterval(checkConnection, 5000);
+
+    // Seed once if database is empty (optional, comment out if you don’t want seeds)
+    const seed = [
+      { id:'r-seed-01', name:'Aisha R.', rating:5, date:'2025-11-02', quote:'Built with heart and rigor. The site feels alive — fast, accessible, and human.' },
+      { id:'r-seed-02', name:'Marco P.', rating:5, date:'2025-10-28', quote:'Conservation map made me pause. It honors people, not just pins.' },
+      { id:'r-seed-03', name:'Priya S.', rating:4, date:'2025-10-09', quote:'NASA weather is clean and useful. I check it daily before bike commutes.' }
+    ];
+    reviewsRef.once('value').then((snap) => {
+      if (!snap.exists()) {
+        const updates = {};
+        seed.forEach(r => { updates[r.id] = r; });
+        return reviewsRef.update(updates);
+      }
+    }).catch(() => { /* ignore seed errors */ });
+
+    // Live listener (reads and updates UI for everyone)
+    reviewsRef.on('value', (snap) => {
       const data = snap.val() || {};
-      render(Object.values(data));
+      const list = Object.values(data);
+      render(list);
+    }, (err) => {
+      setConnStatus(false);
+      showToast('Realtime connection error', 'error');
+      console.error(err);
     });
 
-    // Add
-    form.addEventListener('submit', e => {
+    // Add (writes to DB so everyone sees it)
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = nameInput.value.trim();
+
+      const name = sanitize(nameInput.value);
+      const quote = sanitize(quoteInput.value);
       const rating = parseInt(ratingInput.value, 10);
-      const quote = quoteInput.value.trim();
-      if (!name || !quote || !(rating>=1 && rating<=5)) return;
-      const id = 'r'+Date.now();
+
+      // Validation
+      if (!name || !quote || !(rating >= 1 && rating <= 5)) {
+        showToast('Please complete all fields (rating 1–5).', 'error');
+        return;
+      }
+      if (name.length > 60 || quote.length > 280) {
+        showToast('Name ≤ 60 chars, review ≤ 280 chars.', 'error');
+        return;
+      }
+
+      const id = 'r' + Date.now();
       const date = new Date().toISOString().slice(0,10);
-      reviewsRef.child(id).set({id,name,rating,date,quote});
-      form.reset();
+      const review = { id, name, rating, date, quote };
+
+      reviewsRef.child(id).set(review)
+        .then(() => {
+          setSaveStatus('Posted', true);
+          showToast('Review added');
+          form.reset();
+          nameInput.focus();
+        })
+        .catch(() => {
+          setSaveStatus('Failed', false);
+          showToast('Could not add review', 'error');
+        });
     });
 
-    // Delete
-    grid.addEventListener('click', e => {
+    // Delete (removes from DB for everyone)
+    grid.addEventListener('click', (e) => {
       const btn = e.target.closest('.delete-btn');
       if (!btn) return;
       const id = btn.getAttribute('data-id');
-      reviewsRef.child(id).remove();
+
+      // Simple confirm (non-blocking UI)
+      const ok = confirm('Delete this review for everyone?');
+      if (!ok) return;
+
+      reviewsRef.child(id).remove()
+        .then(() => {
+          setSaveStatus('Deleted', true);
+          showToast('Review deleted');
+        })
+        .catch(() => {
+          setSaveStatus('Delete failed', false);
+          showToast('Could not delete review', 'error');
+        });
+    });
+
+    // Accessibility enhancements: Enter to submit on last input
+    quoteInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        form.dispatchEvent(new Event('submit', { bubbles: true }));
+      }
     });
   </script>
+
+  <!--
+    Notes for production:
+    - Rules (testing):
+      {
+        "rules": { ".read": true, ".write": true }
+      }
+      Publish in Firebase console → Realtime Database → Rules.
+    - Recommended rules (basic validation, public writes):
+      {
+        "rules": {
+          "reviews": {
+            ".read": true,
+            "$id": {
+              ".write": true,
+              ".validate": "newData.hasChildren(['id','name','rating','date','quote']) &&
+                newData.child('name').isString() && newData.child('name').val().length <= 60 &&
+                newData.child('quote').isString() && newData.child('quote').val().length <= 280 &&
+                newData.child('rating').isNumber() && newData.child('rating').val() >= 1 && newData.child('rating').val() <= 5 &&
+                newData.child('date').isString()"
+            }
+          }
+        }
+      }
+    - Auth (optional, for author-only delete):
+      * Enable Firebase Auth (Google Sign-In).
+      * Add authorId to each review (currentUser.uid).
+      * Update rules to allow delete only if data.child('authorId') == auth.uid.
+    - Hosting:
+      * GitHub Pages or Firebase Hosting works. No bundler required.
+    - Security:
+      * Sanitize inputs (done).
+      * Consider rate-limiting on server side if you later add Cloud Functions.
+  -->
 </body>
 </html>
