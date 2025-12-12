@@ -1,57 +1,47 @@
-
-		<div class="wrapper hangmanGame">
-			<div class="overLay">
-				<div class="youWon result">
-					<h4>You Won!</h4>
-					<p>
-						<span class="word"></span>
-						<a class="gsearch" href="#" data-href="https://www.google.co.in/search?q=" target="_blank">?</a>					
-					</p>
-					<span class="next">Play Next</span>
-				</div>
-				<div class="youLost result">
-					<h4>You Lost :(</h4>
-					<p>
-						<span class="word"></span>
-						<a class="gsearch" href="#" data-href="https://www.google.co.in/search?q=" target="_blank">?</a>					
-					</p>
-					<span class="next">Play Next</span>
-				</div>
-			</div>
-
-			<div class="title">
-				HangMan HTML
-			</div>
-			<div class="startWrapper">
-				<div class="categories">
-				<span>Select a category</span>
-				</div>
-				<div class="start">Start Game</div>
-			</div>
-			<div id="hangMan">
-				<div class="indicator">
-					<span class="maxTry">5</span>/<span class="remaining">5</span>
-				</div>
-				<div class="hangman">
-					<div class="shaft"></div>
-					<div class="pole"></div>  
-					<div class="rope"></div>
-					<div class="base"></div>
-					<div class="man">
-						<div class="wrapperMan">
-						<div class="face"></div>
-						<div class="hands"></div>
-						<div class="legs"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="answerSpace"><span></span></div>
-			<div id="keypad"></div>
-			<div id="scoreBoard">
-				<div class="reset"><div><span class="resetBtn">Reset</span></div></div>
-				<div class="mute"><div><span class="muteBtn">Sounds ON</span></div><div><span class="muteBtn">Sounds OFF</span></div></div>
-				<div class="won"><div>Won : <span class="wonCount">0</span></div></div>
-				<div class="lost"><div>Lost : <span class="lostCount">0</span></div></div>
-			</div>
-		</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA Compactible" content="If-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+   
+</head>
+<body>
+  <h1>Hangman</h1>
+  <p>Find the hidden word - Enter a letter.</p>
+  <div class= "game-container">
+    <svg height="250" width="260" class="figure-container">
+      <!--- code --->
+      <line x1="60" y1="20" x2="140" y2="20" />
+      <line x1="1400" y1="20" x2="140" y2="50" />
+      <line x1="60" y1="20" x2="60" y2="230" />
+      <line x1="20" y1="230" x2="100" y2="230" />
+      
+      
+      <!--- head --->
+      <circle cx="140" cy="70" r="20" class="figure-part" />
+      <!--- body --->
+      <line x1="140" y1="90" x2="140" y2="150" class="figure-part" />
+      <!--- arms --->
+      <line x1="140" y1="120" x2="120" y2="100" class="figure-part" />
+      <line x1="140" y1="120" x2="160" y2="100" class="figure-part" />
+      <!--- legs --->
+      <line x1="140" y1="150" x2="120" y2="130" class="figure-part" />
+      <line x1="140" y1="150" x2="160" y2="130" class="figure-part" />
+    </svg>
+    
+    <div class="wrong-letters-container">
+      <div id="wrong-letters"></div>
+    </div>
+    <div class="word" id="word"></div>
+  </div>
+  <!--- container for final message --->
+  <div class="popup-container">
+    
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
