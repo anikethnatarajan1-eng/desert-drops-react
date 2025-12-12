@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Drawing Pad — Desert Drops Secret Arcade</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --bg: #0b0e12;
+      --panel: #12161d;
+      --text: #e9eef8;
+      --muted: #a9b3c7;
+      --accent: #9ef0a7;
+      --accent2: #ffd27d;
+      --danger: #ff6b6b;
+      --shadow: 0 14px 40px rgba(0,0,0,0.45);
+      --radius: 14px;
+      --gap: 18px;
+      --container: min(1100px, 92vw);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 800px at 10% 0%, #0e141b, var(--bg)),
+                  radial-gradient(1000px 600px at 90% 110%, #0e141b, var(--bg));
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    header {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: saturate(120%) blur(8px);
+      background: rgba(18,22,29,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav {
+      width: var(--container); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; }
+    .brand .logo {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 6px 18px rgba(255,255,255,0.35);
+    }
+    .brand .text { color: var(--text); font-weight: 800; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06); color: var(--text);
+      cursor: pointer; transition: 0.2s;
+    }
+    .btn:hover { background: rgba(255,255,255,0.09); }
+    .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #071016; border: none; }
+
+    .toolbar {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      padding: 12px; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+    }
+
+    canvas {
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      background: #fff;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .stats {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">
+        <div class="logo"></div>
+        <span class="text">Desert Drops — Drawing Pad</span>
+      </div>
+      <nav>
+        <a href="projects.html" class="btn">Back to Projects</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="width:var(--container); margin:20px auto;">
+    <h1>Drawing Pad</h1>
+    <p class="lead">A full-featured canvas with tools, colors, shapes, undo/redo, and save options.</p>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <button class="btn primary" id="toolPen">Pen</button>
+      <button class="btn" id="toolEraser">Eraser</button>
+      <button class="btn" id="toolRect">Rectangle</button>
+      <button class="btn" id="toolCircle">Circle</button>
+      <button class="btn" id="toolLine">Line</button>
+      <button class="btn" id="toolText">Text</button>
+      <input type="color" id="colorPicker" value="#000000"/>
+      <input type="range" id="sizePicker" min="1" max="30" value="3"/>
+      <button class="btn" id="btnUndo">Undo</button>
+      <button class="btn" id="btnRedo">Redo</button>
+      <button class="btn danger" id="btnClear">Clear</button>
+      <button class="btn success" id="btnSave">Save</button>
+    </div>
+
+    <!-- Canvas -->
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <!-- Stats -->
+    <div class="stats">
+      <p><strong>Tool:</strong> <span id="statTool">Pen</span></p>
+      <p><strong>Color:</strong> <span id="statColor">#000000</span></p>
+      <p><strong>Size:</strong> <span id="statSize">3</span></p>
+      <p><strong>Strokes:</strong> <span id="statStrokes">0</span></p>
+      <p><strong>Undo stack:</strong> <span id="statUndo">0</span></p>
+      <p><strong>Redo stack:</strong> <span id="statRedo">0</span></p>
+    </div>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let drawing = false;
+    let tool = "pen";
+    let color = "#000000";
+    let size = 3;
+    let startX, startY;
+    let strokes = 0;
+
+    const undoStack = [];
+    const redoStack = [];
+
+    function updateStats(){
+      document.getElementById("statTool").textContent = tool;
+      document.getElementById("statColor").textContent = color;
+      document.getElementById("statSize").textContent = size;
+      document.getElementById("statStrokes").textContent = strokes;
+      document.getElementById("statUndo").textContent = undoStack.length;
+      document.getElementById("statRedo").textContent = redoStack.length;
+    }
+
+    function saveState(){
+      undoStack.push(canvas.toDataURL());
+      redoStack.length = 0;
+      updateStats();
+    }
+
+    function restoreState(stackFrom, stackTo){
+      if(stackFrom.length){
+        stackTo.push(canvas.toDataURL());
+        const img = new Image();
+        img.src = stackFrom.pop();
+        img.onload = ()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); };
+      }
+      updateStats();
+    }
+
+    function startDraw(e){
+      drawing = true;
+      startX = e.offsetX;
+      startY = e.offsetY;
+      if(tool === "pen" || tool === "eraser"){
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+      }
