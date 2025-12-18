@@ -528,16 +528,6 @@
     </div>
   </section>
 
-  <button id="secretBtn">???</button>
-
-<div id="gamesArea" class="hidden">
-  <h2>Secret Games</h2>
-  <ul>
-    <li><a href="hangman.html">Hangman</a></li>
-    <li><a href="draw.html">Drawing Pad</a></li>
-  </ul>
-</div>
-
 
   <!-- Closing -->
   <section id="closing" class="section" aria-labelledby="closing-title">
@@ -578,91 +568,3 @@
     document.getElementById('tts-pause')?.addEventListener('click', () => { if (synth.paused) resume(); else pause(); });
     document.getElementById('tts-stop')?.addEventListener('click', stop);
   </script>
-
-<!-- Secret Games Section -->
-<section id="secret" class="section" aria-labelledby="secret-title">
-  <span class="tag"><span class="dot"></span>Hidden</span>
-  <h2 id="secret-title" class="h2">Secret Arcade</h2>
-
-  <div style="text-align:center; margin-top:20px;">
-    <a href="hangman.html" class="btn primary">Play Hangman</a>
-<a href="draw.html" class="btn primary">Drawing Pad</a>
-
-  <!-- Game containers -->
-  <div id="hangman" class="hidden card pad" style="margin-top:20px;"></div>
-  <div id="draw" class="hidden card pad" style="margin-top:20px;"></div>
-</section>
-
-<script>
-  function showGame(game) {
-    // Hide all games first
-    document.querySelectorAll('#hangman, #draw').forEach(div => div.classList.add('hidden'));
-
-    // Show the chosen game
-    const container = document.getElementById(game);
-    container.classList.remove('hidden');
-
-    // Inject game code if not already loaded
-    if (!container.innerHTML) {
-      if (game === 'hangman') {
-        container.innerHTML = `
-          <h3>Hangman</h3>
-          <div id="word"></div>
-          <div id="letters"></div>
-          <p id="status"></p>
-        `;
-        const words = ["javascript","computer","galaxy","pancake","internet"];
-        let answer = words[Math.floor(Math.random()*words.length)];
-        let guessed = [], wrong = 0;
-        function updateWord(){
-          document.getElementById("word").innerText =
-            answer.split("").map(l => guessed.includes(l)?l:"_").join(" ");
-        }
-        function guess(letter){
-          if(answer.includes(letter)){
-            guessed.push(letter); updateWord();
-            if(!document.getElementById("word").innerText.includes("_")){
-              document.getElementById("status").innerText="You win!";
-            }
-          } else {
-            wrong++; if(wrong>=6){
-              document.getElementById("status").innerText="You lost! Word was: "+answer;
-            }
-          }
-        }
-        function createButtons(){
-          const letters="abcdefghijklmnopqrstuvwxyz".split("");
-          const container=document.getElementById("letters");
-          letters.forEach(l=>{
-            const btn=document.createElement("button");
-            btn.innerText=l; btn.onclick=()=>guess(l);
-            container.appendChild(btn);
-          });
-        }
-        updateWord(); createButtons();
-      }
-
-      if (game === 'draw') {
-        container.innerHTML = `
-          <h3>Drawing Pad</h3>
-          <canvas id="canvas" width="500" height="400" style="border:2px solid black;"></canvas>
-        `;
-        const canvas=document.getElementById("canvas");
-        const ctx=canvas.getContext("2d");
-        let drawing=false;
-        canvas.addEventListener("mousedown",()=>drawing=true);
-        canvas.addEventListener("mouseup",()=>drawing=false);
-        canvas.addEventListener("mousemove",e=>{
-          if(!drawing)return;
-          ctx.fillStyle="black";
-          ctx.beginPath();
-          ctx.arc(e.offsetX,e.offsetY,3,0,Math.PI*2);
-          ctx.fill();
-        });
-      }
-    }
-  }
-</script>
-
-</body>
-</html>
